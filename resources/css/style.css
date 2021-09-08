@@ -1,0 +1,87 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #073642;
+    color: #fdf6e3;
+}
+a:link, a:visited, a:hover, a:active {
+    text-decoration: none;
+    color: #fdf6e3;
+}
+.quarter {
+    height: 25vh;
+    position: relative;
+}
+.third {
+    height: 33.3vh;
+    position: relative;
+}
+.half {
+    height: 50vh;
+    position: relative;
+}
+.full {
+    height: 100vh;
+    position: relative;
+}
+.center {
+    display: block;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+.navbar {
+    background-color: #002b36;
+    color: #fdf6e3;
+    position: fixed;
+    top: 0;
+    width: 100vw;
+}
+.navbar li {
+    display: inline-block;
+    padding: 1vh 2vw;
+}
+#hover {
+    animation: bounce 2s infinite ease-in-out
+}
+#hoverbox {
+    margin: 0;
+    /*border: 3px solid red;*/
+}
+#image_me {
+    width: 20vw;
+}
+@keyframes bounce{
+    0%   { transform: rotate(-90deg) scale(1,1)      translateX(0);     }
+    25%  { transform: rotate(-90deg) scale(.9,1.1)   translateX(0);     }
+    40%  { transform: rotate(-90deg) scale(1.1,.9)   translateX(-1vh);  }
+    58%  { transform: rotate(-90deg) scale(.95,1.05) translateX(0);     }
+    70%  { transform: rotate(-90deg) scale(1,1)      translateX(-.1vh); }
+    84%  { transform: rotate(-90deg) scale(1,1)      translateX(0);     }
+    100% { transform: rotate(-90deg) scale(1,1)      translateX(0);     }
+}
+#text1{
+    font-size: 10vh;
+    white-space: nowrap;
+    line-height: 8vh;
+    font-family: 'Times New Roman', Times, serif;
+    opacity: 0;
+    transition: all 0.5s;
+}
+#hoverbox:hover #text1 {
+    opacity: 1;
+}
+#banner {
+    background-color: #002b36;
+    color: #fdf6e3;
+    margin-top: 1vh;
+    text-align: center;
+    padding: 1vh 0;
+}
+
+#banner_kopf{
+    height: 15vh;
+}
