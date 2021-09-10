@@ -43,6 +43,8 @@ a:link, a:visited, a:hover, a:active {
     height: 100vh;
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-wrap: wrap;
 }
 .center {
     display: block;
@@ -112,8 +114,22 @@ header>h1 {
 }
 
 /* Solar System */
-#days {
+
+#canvas {
     position: relative;
+    width: 70%;
+}
+
+#settings {
+    width: 30%;
+    display: flex;
+    flex-flow: column;
+    border-radius: 3vw;
+    background-color: #93a1a1;
+}
+
+#timeline {
+    width: 100%;
 }
 
 #solarsystem {
