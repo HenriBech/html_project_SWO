@@ -232,7 +232,7 @@ function position(scale) {
 }
 
 var d = -35000;
-var scale = 20;
+var scale = 60;
 var step = 1;
 position(scale);
 id = setInterval(frame, 10);
