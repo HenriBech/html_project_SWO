@@ -33,23 +33,23 @@ function ecl(d) {
 
 class astroElement {
     constructor(N, i, w, a, e, M, update) {
-        this._N = getRadians(N)                     // longitude of the ascending node
-        this._i = getRadians(i);                    // inclination to the ecliptic (plane of the Earth's orbit)
-        this._w = getRadians(w);                    // argument of perihelion
-        this._a = a;                                // semi-major axis, or mean distance from Sun (set in AE, ideally)
-        this._e = e;                                // eccentricity (0=circle, 0-1=ellipse, 1=parabola)
-        this._M = getRadians(M);                    // mean anomaly (0 at perihelion; increases uniformly with time)
+        this._N0 = getRadians(N)                     // longitude of the ascending node
+        this._i0 = getRadians(i);                    // inclination to the ecliptic (plane of the Earth's orbit)
+        this._w0 = getRadians(w);                    // argument of perihelion
+        this._a0 = a;                                // semi-major axis, or mean distance from Sun (set in AE, ideally)
+        this._e0 = e;                                // eccentricity (0=circle, 0-1=ellipse, 1=parabola)
+        this._M0 = getRadians(M);                    // mean anomaly (0 at perihelion; increases uniformly with time)
         this._update = update;
         this.updateElement(0);
     }
     updateElement(d) {
         // update orbital elements
-        this._N += getRadians(this._update.N*d);
-        this._i += getRadians(this._update.i*d);
-        this._w += getRadians(this._update.w*d);
-        this._a += this._update.a*d;
-        this._e += this._update.e*d;
-        this._M += getRadians(this._update.M*d);
+        this._N = getRadians(this._N0 + this._update.N*d);
+        this._i = getRadians(this._i0 + this._update.i*d);
+        this._w = getRadians(this._w0 + this._update.w*d);
+        this._a = this._a0 + this._update.a*d;
+        this._e = this._e0 + this._update.e*d;
+        this._M = getRadians(this._M0 + this._update.M*d);
         // additional variables
         this._w1 = this._N + this._w;         // longitude of perihelion
         this._L = this._M + this._w1;         // mean longitude
@@ -208,7 +208,7 @@ const neptune_d = {
 
 const solarSystem = {
     sun: new sunElement(0.0, 0.0, 282.9404, 1.000000, 0.016709, 356.0470, sun_d),
-    moon: new planetElement(125.1228, 5.1454, 318.0634, 60.2666, 0.054900, 115.3654, moon_d),
+    moon: new planetElement(125.1228, 5.1454, 318.0634, 60.2666*4.26352e-5, 0.054900, 115.3654, moon_d),
     mercury: new planetElement(48.3313, 7.0047, 29.1241, 0.387098, 0.205635, 168.6562, mercury_d),
     venus: new planetElement(76.6799, 3.3946, 54.8910, 0.723330, 0.006773, 48.0052, venus_d),
     mars: new planetElement(49.5574, 1.8497, 286.5016, 1.523688, 0.093405, 18.6021, mars_d),
@@ -218,4 +218,34 @@ const solarSystem = {
     neptune: new planetElement(131.7806, 1.7700, 272.8461, 30.05826, 0.008606, 260.2471, neptune_d)
 }
 
-alert(solarSystem.sun.pos.y);
+function updateSolarSystem(d) {
+    Object.keys(solarSystem).forEach(element => {
+        solarSystem[element].updateElement(d);
+    });
+}
+
+function position(scale) {
+    Object.keys(solarSystem).forEach(element => {
+        document.getElementById(element).style.top = solarSystem[element].pos.y*scale+"px";
+        document.getElementById(element).style.left = solarSystem[element].pos.x*scale+"px";
+    });
+}
+
+var d = -35000;
+var scale = 20;
+var step = 1;
+position(scale);
+id = setInterval(frame, 10);
+
+function frame() {
+  if (0) {
+    clearInterval(id);
+  } else if (d>=35000) {
+      d = -35000;
+  } else {
+    d+=step;
+    updateSolarSystem(d);
+    position(scale);
+    document.getElementById("d").innerHTML = d;
+  }
+}
