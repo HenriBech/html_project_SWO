@@ -218,6 +218,8 @@ const solarSystem = {
     neptune: new planetElement(131.7806, 1.7700, 272.8461, 30.05826, 0.008606, 260.2471, neptune_d)
 }
 
+/* functions for displaying the solar system */
+
 function updateSolarSystem(d) {
     Object.keys(solarSystem).forEach(element => {
         solarSystem[element].updateElement(d);
@@ -231,21 +233,62 @@ function position(scale) {
     });
 }
 
-var d = -35000;
-var scale = 60;
-var step = 1;
-position(scale);
-id = setInterval(frame, 10);
-
 function frame() {
-  if (0) {
-    clearInterval(id);
-  } else if (d>=35000) {
-      d = -35000;
-  } else {
-    d+=step;
-    updateSolarSystem(d);
-    position(scale);
-    document.getElementById("d").innerHTML = d;
+    if (0) {
+      clearInterval(id);
+    } else if (d>=35000) {
+        d = -35000;
+    } else {
+      d+=step;
+      updateSolarSystem(d);
+      position(scale);
+      document.getElementById("d").innerHTML = d;
+    }
   }
+
+var anim = setInterval(frame, 10);
+
+function drawOrbit(element, dom) {
+    const canvas = dom;
+    const ctx = canvas.getContext('2d');
+    ctx.translate(canvas.width * 0.5, canvas.height * 0.5);
+
+    // Draw the ellipse
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 50, 75, Math.PI / 4, 0, 2 * Math.PI);
+    ctx.stroke();
 }
+
+/* functions for html-interaction */
+
+function updateScale() {
+    document.getElementById("scale-form").value = scale;
+}
+function minusScale() {
+    scale -= 10;
+    updateScale();
+}
+function plusScale() {
+    scale += 10;
+    updateScale();
+}
+
+/* settings */ 
+
+var d = -35000;
+
+var scale = 60;
+position(scale);
+updateScale();
+document.getElementById("scale-minus").addEventListener("click", minusScale);
+document.getElementById("scale-plus").addEventListener("click", plusScale);
+document.getElementById("scale-form").addEventListener("keyup", event => {
+    if(event.key == "Enter") {// Check for Enter-key
+    scale = Number(document.getElementById("scale-form").value);
+    updateScale();
+    } else {return;}
+    event.preventDefault();
+});
+drawOrbit(mars, document.getElementById('mars-orbit'))
+
+var step = 1;

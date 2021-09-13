@@ -10,38 +10,109 @@
 </head>
 <body>
     <nav class="navbar">
+        <p class="logo">
+            (:
+        </p>
         <ul>
             <li><a href="">Home</a></li>
             <li><a href="">About</a></li>
             <li><a href="">Contact</a></li>
         </ul>
     </nav>
-    <header id="banner" class="quarter">
-        <h1>home is where the head is</h1>
-        <img id="banner_kopf" src="resources/images/banner.webp" alt="kopf">
-    </header>
+    <div id="offset"></div>
     <section class="full">
-        <script type="text/javascript" src="./maths.js" async></script>
-        <div id="canvas">
-            <div id="solarsystem">
-                <img src="" alt="sun by Muhammad Atiq from the Noun Project">
-                <div class="planet" id="sun"><p>🜨</p>
-                    <div class="planet" id="moon"><p>☽</p></div>
+        <div id="view">
+            <script type="text/javascript" src="./maths.js" async></script>
+            <div id="canvas">
+                <div id="solarsystem">
+                    <canvas id="mars-orbit"></canvas>
+                    <img src="./resources/images/planets/sun.svg" alt="sun by Muhammad Atiq from the Noun Project">
+                    <div class="planet" id="sun"><img src="./resources/images/planets/earth.svg" alt="Earth by Kevin White from the Noun Project">
+                        <p class="astro">🜨</p>
+                        <div class="planet" id="moon"><p class="astro">☽</p></div>
+                    </div>
+                    <div class="planet" id="mercury"><img src="./resources/images/planets/mercury.svg" alt="Mercury by Kevin White from the Noun Project">
+                        <p class="astro">☿</p></div>
+                    <div class="planet" id="venus"><img src="./resources/images/planets/venus.svg" alt="Venus by Kevin White from the Noun Project">
+                        <p class="astro">♀</p></div>
+                    <div class="planet" id="mars"><img src="./resources/images/planets/mars.svg" alt="Mars by Kevin White from the Noun Project">
+                        <p class="astro">♂</p></div>
+                    <div class="planet" id="jupiter"><img src="./resources/images/planets/jupiter.svg" alt="Jupiter by Kevin White from the Noun Project">
+                        <p class="astro">♃</p></div>
+                    <div class="planet" id="saturn"><img src="./resources/images/planets/saturn.svg" alt="Saturn by Kevin White from the Noun Project">
+                        <p class="astro">♄</p></div>
+                    <div class="planet" id="uranus"><img src="./resources/images/planets/uranus.svg" alt="Uranus by Kevin White from the Noun Project">
+                        <p class="astro">⛢</p></div>
+                    <div class="planet" id="neptune"><img src="./resources/images/planets/neptune.svg" alt="Neptune by Kevin White from the Noun Project">
+                        <p class="astro">♆</p></div>
                 </div>
-                <div class="planet" id="mercury"><p>☿</p></div>
-                <div class="planet" id="venus"><p>♀</p></div>
-                <div class="planet" id="mars"><p>♂</p></div>
-                <div class="planet" id="jupiter"><p>♃</p></div>
-                <div class="planet" id="saturn">
-                    <img src="" alt="Saturn by Kevin White from the Noun Project"><p>♄</p></div>
-                <div class="planet" id="uranus"><p>⛢</p></div>
-                <div class="planet" id="neptune"><p>♆</p></div>
+            </div>
+            <div id="settings">
+                <div id="planet-settings">
+                    <h3>Planet Settings</h3>
+                    <table>
+                        <tr>Mercury</tr>
+                        <tr>Venus</tr>
+                        <tr>Earth</tr>
+                        <tr>Moon</tr>
+                        <tr>Mars</tr>
+                        <tr>Jupiter</tr>
+                        <tr>Saturn</tr>
+                        <tr>Uranus</tr>
+                        <tr>Neptune</tr>
+                    </table>
+                </div>
+                <div id="canvas-settings">
+                    <h3>Canvas Settings</h3>
+                    <div>
+                        <p>Scale: </p>
+                        <form action="javascript:void(0);">
+                            <input type="button" value="-" id="scale-minus">
+                            <input type="text" name="" id="scale-form">
+                            <input type="button" value="+" id="scale-plus">
+                        </form>
+                    </div>
+                    <div>
+                        <p>Planet-size: </p>
+                        <form action="">
+                            <input type="button" value="Uniform">
+                            <input type="button" value="True">
+                            <input type="button" value="True-Scaled">
+                        </form>
+                    </div>
+                    <div>
+                        <p>Orbits: </p>
+                        <input type="button" value="Show/Hide">
+                    </div>
+                </div>
+                <div id="speed-settings">
+                    <h3>Speed Settings</h3>
+                    <div>
+                        <p>Speed: </p>
+                        <form action="">
+                            <input type="button" value="-">
+                            <input type="text" name="" id="" value="10">
+                            <input type="button" value="+">
+                        </form>
+                    </div>
+                    <div>
+                        <p>Step: </p>
+                        <form action="">
+                            <input type="button" value="-">
+                            <input type="text" name="" id="" value="1">
+                            <input type="button" value="+">
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
-        <div id="settings">
-
-        </div>
         <div id="timeline">
+            <div id="timeline-slider">
+
+            </div>
+            <div id="datebox">
+
+            </div>
             <div id="days">
                 <p>Day: <span id="d"></span></p>
             </div>
