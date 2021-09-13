@@ -184,6 +184,20 @@ header>h1 {
     font-size: 1.2rem;
 }
 
+#planet-settings {
+    overflow-y: scroll;
+}
+
+#planet-settings input[type="button"] {
+    width: 3vw;
+}
+
+#planet-settings table img {
+    width: 1.9vw;
+    height: auto;
+    filter: invert(100%);
+}
+
 #canvas-settings {
     display: flex;
     flex-flow: column nowrap;
@@ -270,8 +284,8 @@ header>h1 {
     left: 50%;
     transform: translate(-50%, -50%);
     border: royalblue 1px solid;
-    width: fit-content;
-    height: fit-content;
+    width: 600px;
+    height: 600px;
 }
 
 #solarsystem>img {
@@ -299,8 +313,8 @@ header>h1 {
 
 .planet {
     position: absolute;
-    height: 25px;
-    width: 25px;
+    height: 1.7vw;
+    width: 1.7vw;
     border-radius: 50%;
     display: inline-block;
     text-align: center;

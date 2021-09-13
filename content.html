@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Henri</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="resources/css/reset.css">
     <link rel="stylesheet" href="resources/css/style.css">
 </head>
@@ -51,15 +52,96 @@
                 <div id="planet-settings">
                     <h3>Planet Settings</h3>
                     <table>
-                        <tr>Mercury</tr>
-                        <tr>Venus</tr>
-                        <tr>Earth</tr>
-                        <tr>Moon</tr>
-                        <tr>Mars</tr>
-                        <tr>Jupiter</tr>
-                        <tr>Saturn</tr>
-                        <tr>Uranus</tr>
-                        <tr>Neptune</tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Hide</th>
+                            <th>Orbit</th>
+                            <th>Color</th>
+                            <th>Icon</th>
+                            <th>Sign</th>
+                            <th>Focus</th>
+                        </tr>
+                        <tr>
+                            <th><img src="./resources/images/planets/mercury.svg"> Mercury</th>
+                            <td><input type="button" value="Show/Hide" onclick="togglePlanet('mercury')"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Focus/Unfocus"></td>
+                        </tr>
+                        <tr>
+                            <th><img src="./resources/images/planets/venus.svg"> Venus</th>
+                            <td><input type="button" value="Show/Hide" onclick="togglePlanet('venus')"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Focus/Unfocus"></td>
+                        </tr>
+                        <tr>
+                            <th><img src="./resources/images/planets/earth.svg"> Earth</th>
+                            <td><input type="button" value="Show/Hide" onclick="togglePlanet('sun')"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Focus/Unfocus"></td>
+                        </tr>
+                        <tr>
+                            <th>Moon</th>
+                            <td><input type="button" value="Show/Hide" onclick="togglePlanet('moon')"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Focus/Unfocus"></td>
+                        </tr>
+                        <tr>
+                            <th><img src="./resources/images/planets/mars.svg"> Mars</th>
+                            <td><input type="button" value="Show/Hide" onclick="togglePlanet('mars')"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Focus/Unfocus"></td>
+                        </tr>
+                        <tr>
+                            <th><img src="./resources/images/planets/jupiter.svg"> Jupiter</th>
+                            <td><input type="button" value="Show/Hide" onclick="togglePlanet('jupiter')"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Focus/Unfocus"></td>
+                        </tr>
+                        <tr>
+                            <th><img src="./resources/images/planets/saturn.svg"> Saturn</th>
+                            <td><input type="button" value="Show/Hide" onclick="togglePlanet('saturn')"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Focus/Unfocus"></td>
+                        </tr>
+                        <tr>
+                            <th><img src="./resources/images/planets/uranus.svg"> Uranus</th>
+                            <td><input type="button" value="Show/Hide" onclick="togglePlanet('uranus')"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Focus/Unfocus"></td>
+                        </tr>
+                        <tr>
+                            <th><img src="./resources/images/planets/neptune.svg"> Neptune</th>
+                            <td><input type="button" value="Show/Hide" onclick="togglePlanet('neptune')"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Show/Hide"></td>
+                            <td><input type="button" value="Focus/Unfocus"></td>
+                        </tr>
                     </table>
                 </div>
                 <div id="canvas-settings">
@@ -74,7 +156,7 @@
                     </div>
                     <div>
                         <p>Planet-size: </p>
-                        <form action="">
+                        <form action="javascript:void(0);">
                             <input type="button" value="Uniform">
                             <input type="button" value="True">
                             <input type="button" value="True-Scaled">
@@ -86,21 +168,12 @@
                     </div>
                 </div>
                 <div id="speed-settings">
-                    <h3>Speed Settings</h3>
                     <div>
                         <p>Speed: </p>
-                        <form action="">
-                            <input type="button" value="-">
-                            <input type="text" name="" id="" value="10">
-                            <input type="button" value="+">
-                        </form>
-                    </div>
-                    <div>
-                        <p>Step: </p>
-                        <form action="">
-                            <input type="button" value="-">
-                            <input type="text" name="" id="" value="1">
-                            <input type="button" value="+">
+                        <form action="javascript:void(0);">
+                            <input type="button" value="-" id="step-minus">
+                            <input type="text" name="" id="step-form">
+                            <input type="button" value="+" id="step-plus">
                         </form>
                     </div>
                 </div>
