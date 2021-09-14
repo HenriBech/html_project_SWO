@@ -16,7 +16,6 @@ $blue:      #268bd2;
 $cyan:      #2aa198;
 $green:     #859900
 */
-
 @import url('https://fonts.googleapis.com/css2?family=Kaisei+HarunoUmi:wght@400;700&display=swap');
 
 html {
@@ -93,6 +92,9 @@ a:link, a:visited, a:hover, a:active {
     height: 7vh;
     width: 100%;
 }
+#first-post {
+    height: 93vh;
+}
 #hover {
     animation: bounce 2s infinite ease-in-out;
 }
@@ -154,12 +156,21 @@ header>h1 {
     position: relative;
     box-sizing: border-box;
     width: 100%;
-    height: 85%;
+    height: 95%;
 }
 
 #canvas {
     position: relative;
     width: 100%;
+    transition: width 2s;
+}
+
+#setting-icon {
+    position: absolute;
+    right: 1vw;
+    top: 1vh;
+    font-size: 1rem;
+    width: fit-content;
 }
 
 #settings {
@@ -167,6 +178,7 @@ header>h1 {
     display: flex;
     flex-flow: column;
     padding: 4vh 2vw;
+    transition: right 2000ms, ease-in;
 }
 
 #settings>* {
@@ -198,6 +210,13 @@ header>h1 {
     filter: invert(100%);
 }
 
+#planet-settings tr>* {
+    align-items: center;
+    text-align: center;
+    vertical-align: middle;
+    padding: 1vh 1vw;
+}
+
 #canvas-settings {
     display: flex;
     flex-flow: column nowrap;
@@ -210,10 +229,16 @@ header>h1 {
 #canvas-settings>*>* {
     display: inline-block;
 }
+
 #canvas-settings>div {
     display: inline-flex;
     justify-content: space-between;
 }
+
+#canvas-settings a {
+    color: #93a1a1;
+}
+
 #speed-settings {
     display: flex;
     flex-flow: column nowrap;
@@ -225,6 +250,10 @@ header>h1 {
 #speed-settings>div {
     display: inline-flex;
     justify-content: space-between;
+}
+
+#speed-settings a {
+    color: #93a1a1;
 }
 
 #settings form>input[type="text"] {
@@ -250,6 +279,10 @@ header>h1 {
     align-items: center;
     justify-content: center;
     z-index: 5;
+}
+
+#timeline a {
+    color: #93a1a1;
 }
 
 #timeline-slider {
@@ -311,6 +344,10 @@ header>h1 {
     padding-left: 1.7vw;
 }
 
+#solarsystem #moon>p {
+    padding-bottom: 0 !important;
+}
+
 .planet {
     position: absolute;
     height: 1.7vw;
@@ -327,6 +364,7 @@ header>h1 {
 
 .planet#moon {
     background-color: #93a1a1;
+    visibility: visible;
 }
 
 .planet#mercury {
@@ -355,4 +393,40 @@ header>h1 {
 
 .planet#neptune {
     background-color: #6c71c4;
+}
+
+#mercury-setting th, #mercury-setting a {
+    color: #cb4b16;
+}
+
+#venus-setting th, #venus-setting a {
+    color: #d33682;
+}
+
+#sun-setting th, #sun-setting a {
+    color: #268bd2;
+}
+
+#moon-setting th, #moon-setting a {
+    color: #93a1a1;
+}
+
+#mars-setting th, #mars-setting a {
+    color: #dc322f;
+}
+
+#jupiter-setting th, #jupiter-setting a {
+    color: #b58900;
+}
+
+#saturn-setting th, #saturn-setting a {
+    color: #859900;
+}
+
+#uranus-setting th, #uranus-setting a {
+    color: #2aa198;
+}
+
+#neptune-setting th, #neptune-setting a {
+    color: #6c71c4;
 }
