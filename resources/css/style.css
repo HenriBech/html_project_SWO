@@ -159,6 +159,18 @@ header>h1 {
     height: 95%;
 }
 
+#adam {
+    position: absolute;
+    display: flex;
+    flex-flow: column nowrap;
+}
+
+#adam>object {
+    fill: black;
+    height: 100px;
+    width: 400px;
+}
+
 #canvas {
     position: relative;
     width: 100%;
