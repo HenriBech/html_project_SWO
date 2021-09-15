@@ -38,25 +38,25 @@
             </div>
             <div id="canvas">
                 <div id="solarsystem">
-                    <img src="./resources/images/planets/sun.svg" alt="sun by Muhammad Atiq from the Noun Project">
-                    <div class="planet" id="sun"><img src="./resources/images/planets/earth.svg" alt="Earth by Kevin White from the Noun Project">
+                    <img id="sol-img" src="./resources/images/planets/sun.svg" alt="sun by Muhammad Atiq from the Noun Project">
+                    <div class="planet" id="sun"><img id="sun-img" src="./resources/images/planets/earth.svg" alt="Earth by Kevin White from the Noun Project">
                         <p class="astro">🜨</p>
-                        <div class="planet" id="moon"><img src="./resources/images/planets/moon.svg" alt="Moon by Bakunetsu Kaito from the Noun Project">
+                        <div class="planet" id="moon"><img id="moon-img" src="./resources/images/planets/moon.svg" alt="Moon by Bakunetsu Kaito from the Noun Project">
                             <p class="astro">☽</p></div>
                     </div>
-                    <div class="planet" id="mercury"><img src="./resources/images/planets/mercury.svg" alt="Mercury by Kevin White from the Noun Project">
+                    <div class="planet" id="mercury"><img id="mercury-img" src="./resources/images/planets/mercury.svg" alt="Mercury by Kevin White from the Noun Project">
                         <p class="astro">☿</p></div>
-                    <div class="planet" id="venus"><img src="./resources/images/planets/venus.svg" alt="Venus by Kevin White from the Noun Project">
+                    <div class="planet" id="venus"><img id="venus-img" src="./resources/images/planets/venus.svg" alt="Venus by Kevin White from the Noun Project">
                         <p class="astro">♀</p></div>
-                    <div class="planet" id="mars"><img src="./resources/images/planets/mars.svg" alt="Mars by Kevin White from the Noun Project">
+                    <div class="planet" id="mars"><img id="mars-img" src="./resources/images/planets/mars.svg" alt="Mars by Kevin White from the Noun Project">
                         <p class="astro">♂</p></div>
-                    <div class="planet" id="jupiter"><img src="./resources/images/planets/jupiter.svg" alt="Jupiter by Kevin White from the Noun Project">
+                    <div class="planet" id="jupiter"><img id="jupiter-img" src="./resources/images/planets/jupiter.svg" alt="Jupiter by Kevin White from the Noun Project">
                         <p class="astro">♃</p></div>
-                    <div class="planet" id="saturn"><img src="./resources/images/planets/saturn.svg" alt="Saturn by Kevin White from the Noun Project">
+                    <div class="planet" id="saturn"><img id="saturn-img" src="./resources/images/planets/saturn.svg" alt="Saturn by Kevin White from the Noun Project">
                         <p class="astro">♄</p></div>
-                    <div class="planet" id="uranus"><img src="./resources/images/planets/uranus.svg" alt="Uranus by Kevin White from the Noun Project">
+                    <div class="planet" id="uranus"><img id="uranus-img" src="./resources/images/planets/uranus.svg" alt="Uranus by Kevin White from the Noun Project">
                         <p class="astro">⛢</p></div>
-                    <div class="planet" id="neptune"><img src="./resources/images/planets/neptune.svg" alt="Neptune by Kevin White from the Noun Project">
+                    <div class="planet" id="neptune"><img id="neptune-img" src="./resources/images/planets/neptune.svg" alt="Neptune by Kevin White from the Noun Project">
                         <p class="astro">♆</p></div>
                 </div>
             </div>
@@ -144,9 +144,9 @@
                     <div>
                         <p>Planet-size: </p>
                         <form action="javascript:void(0);">
-                            <input type="button" value="Uniform">
-                            <input type="button" value="True">
-                            <input type="button" value="True (relative)">
+                            <input type="button" value="Uniform" onclick="setPlanetSize('uniform')">
+                            <input type="button" value="True" onclick="setPlanetSize('true')">
+                            <input type="button" value="Rrelative" onclick="setPlanetSize('relative')">
                         </form>
                     </div>
                     <div>

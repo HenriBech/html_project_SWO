@@ -18,6 +18,11 @@ const calc = {
         // valid between 1900 and 2100
         return 367*y - 7 * calc.div(( y + calc.div((m+9), 12) ), 4) + 275*calc.div(m,9) + D - 730530;
     },
+
+    getAU(D) {
+        // returns the distance D (km) in AU
+        return D/1.495978707e+8;
+    },
     
     getRadians(deg) {
         // computes radians of an angle
@@ -38,13 +43,14 @@ const calc = {
 /*  Class for the astrological elements and for updating them */
 
 class astroElement {
-    constructor(N, i, w, a, e, M, update) {
+    constructor(N, i, w, a, e, M, D, update) {
         this._N0 = calc.modulateCircle(calc.getRadians(N));                     // longitude of the ascending node
         this._i0 = calc.modulateCircle(calc.getRadians(i));                    // inclination to the ecliptic (plane of the Earth's orbit)
         this._w0 = calc.modulateCircle(calc.getRadians(w));                    // argument of perihelion
-        this._a0 = a;                                // semi-major axis, or mean distance from Sun (set in AE, ideally)
+        this._a0 = a;                                // semi-major axis, or mean distance from Sun (set in AU, ideally)
         this._e0 = e;                                // eccentricity (0=circle, 0-1=ellipse, 1=parabola)
         this._M0 = calc.modulateCircle(calc.getRadians(M));                    // mean anomaly (0 at perihelion; increases uniformly with time)
+        this._D = D;
         this._update = update;
         this.elementAt(0);
     }
@@ -71,8 +77,8 @@ class astroElement {
 }
 
 class sunElement extends astroElement {
-    constructor(N, i, w, a, e, M, update) {
-        super(N, i, w, a, e, M, update);
+    constructor(N, i, w, a, e, M, D, update) {
+        super(N, i, w, a, e, M, D, update);
         this._type = "sun";
     }
     elementAt(d) {
@@ -97,8 +103,8 @@ class sunElement extends astroElement {
 }
 
 class planetElement extends astroElement {
-    constructor(N, i, w, a, e, M, update) {
-        super(N, i, w, a, e, M, update);
+    constructor(N, i, w, a, e, M, D, update) {
+        super(N, i, w, a, e, M, D, update);
         this._type = "planet"
     }
     elementAt(d) {
@@ -215,15 +221,15 @@ const neptune_d = {
 /* initializing astronomical elements */
 
 const solarSystem = {
-    sun: new sunElement(0.0, 0.0, 282.9404, 1.000000, 0.016709, 356.0470, sun_d),
-    moon: new planetElement(125.1228, 5.1454, 318.0634, 60.2666*4.26352e-5, 0.054900, 115.3654, moon_d),
-    mercury: new planetElement(48.3313, 7.0047, 29.1241, 0.387098, 0.205635, 168.6562, mercury_d),
-    venus: new planetElement(76.6799, 3.3946, 54.8910, 0.723330, 0.006773, 48.0052, venus_d),
-    mars: new planetElement(49.5574, 1.8497, 286.5016, 1.523688, 0.093405, 18.6021, mars_d),
-    jupiter: new planetElement(100.4542, 1.3030, 273.8777, 5.20256, 0.048498, 19.8950, jupiter_d),
-    saturn: new planetElement(113.6634, 2.4886, 339.3939, 9.55475, 0.055546, 316.9670, saturn_d),
-    uranus: new planetElement(74.0005, 0.7733,  96.6612, 19.18171, 0.047318, 142.5905, uranus_d),
-    neptune: new planetElement(131.7806, 1.7700, 272.8461, 30.05826, 0.008606, 260.2471, neptune_d)
+    sun: new sunElement(0.0, 0.0, 282.9404, 1.000000, 0.016709, 356.0470, calc.getAU(12756), sun_d),
+    moon: new planetElement(125.1228, 5.1454, 318.0634, 60.2666*4.26352e-5, 0.054900, 1153654, calc.getAU(3475), moon_d),
+    mercury: new planetElement(48.3313, 7.0047, 29.1241, 0.387098, 0.205635, 168.6562, calc.getAU(4879), mercury_d),
+    venus: new planetElement(76.6799, 3.3946, 54.8910, 0.723330, 0.006773, 48.0052, calc.getAU(12104), venus_d),
+    mars: new planetElement(49.5574, 1.8497, 286.5016, 1.523688, 0.093405, 18.6021, calc.getAU(6792), mars_d),
+    jupiter: new planetElement(100.4542, 1.3030, 273.8777, 5.20256, 0.048498, 19.8950, calc.getAU(142984), jupiter_d),
+    saturn: new planetElement(113.6634, 2.4886, 339.3939, 9.55475, 0.055546, 316.9670, calc.getAU(120536), saturn_d),
+    uranus: new planetElement(74.0005, 0.7733,  96.6612, 19.18171, 0.047318, 142.5905, calc.getAU(51118), uranus_d),
+    neptune: new planetElement(131.7806, 1.7700, 272.8461, 30.05826, 0.008606, 260.2471, calc.getAU(49528), neptune_d)
 }
 
 /* functions for displaying the solar system */
@@ -234,10 +240,11 @@ function updateSolarSystem(d) {
     });
 }
 
+
 function position(scale) {
     Object.keys(solarSystem).forEach(instance => {
-        document.getElementById(instance).style.top = solarSystem[instance].pos.y*scale+"px";
-        document.getElementById(instance).style.left = solarSystem[instance].pos.x*scale+"px";
+        document.getElementById(instance).style.setProperty('top', 'calc(50% + '+solarSystem[instance].pos.y*scale+'px)');
+        document.getElementById(instance).style.setProperty('left', 'calc(50% + '+solarSystem[instance].pos.x*scale+'px)');
     });
 }
 
@@ -250,7 +257,7 @@ function frame() {
       d+=step;
       updateSolarSystem(d);
       position(scale);
-      document.getElementById("d").innerHTML = solarSystem.mars.epoch;
+      document.getElementById("d").innerHTML = Math.round(d);
     }
   }
 
@@ -288,8 +295,13 @@ function drawOrbit(instance, dom, epoch=0, n=1000) {
 
 /* functions for html-interaction */
 
+function docRem() {
+    return window.getComputedStyle(document.querySelector('html')).getPropertyValue('font-size').match(/\d/g).join("");
+}
+
 function updateScale() {
     document.getElementById("scale-form").value = scale;
+    if (sizingMode == 'relative') {setPlanetSize('relative');};
 }
 function minusScale() {
     scale -= 10;
@@ -354,6 +366,61 @@ function toggleFocusIcon(name) {
             focus.focus.classList.toggle('fa-dot-circle');
             focus.focus = name;
         }
+    }
+}
+
+var sizingMode;
+
+function setPlanetSize(mode) {
+    rem = docRem();
+    sizingMode = mode;
+    switch (mode) {
+        case 'uniform':
+            solarSystem.moon._a0 = 60.2666*4.26352e-5;
+            document.getElementById('solarsystem').style.width = '2rem';
+            document.getElementById('solarsystem').style.height = '2rem';
+            document.getElementById('sol-img').style.width = '3.6rem';
+            Object.keys(solarSystem).forEach(instance => {
+                document.getElementById(instance).style.width = '2rem';
+                document.getElementById(instance).style.height = '2rem';
+                document.getElementById(instance.toString()+'-img').style.width = '2.4rem';
+                document.querySelector('#'+instance+' p').style.setProperty('padding-bottom', '2.2rem');
+                document.querySelector('#'+instance+' p').style.setProperty('padding-left', '2.2rem');
+            });
+            break;
+        case 'true':
+            solarSystem.moon._a0 = 60.2666*4.26352e-5;
+            scale = 500;
+            updateScale();
+            step = 0.1;
+            updateStep();
+            document.getElementById('solarsystem').style.width = calc.getAU(1.3927e+6*scale/rem).toString()+'rem';
+            document.getElementById('solarsystem').style.height = calc.getAU(1.3927e+6*scale/rem).toString()+'rem';
+            document.getElementById('sol-img').style.width = calc.getAU(1.3927e+6*1.8*scale/rem).toString()+'rem';
+            Object.keys(solarSystem).forEach(instance => {
+                document.getElementById(instance).style.width = (solarSystem[instance]._D*scale/rem).toString()+'rem';
+                document.getElementById(instance).style.height = (solarSystem[instance]._D*scale/rem).toString()+'rem';
+                document.getElementById(instance.toString()+'-img').style.width = (solarSystem[instance]._D*1.2*scale/rem).toString()+'rem';
+                document.querySelector('#'+instance+' p').style.setProperty('padding-bottom', '2.2rem');
+                document.querySelector('#'+instance+' p').style.setProperty('padding-left', (solarSystem[instance]._D*scale/rem).toString()+'rem');
+            });
+            break;
+        case 'relative':
+            let scaleFactor = 2000;
+            solarSystem.moon._a0 = 0.13;
+            document.getElementById('solarsystem').style.width = '2rem';
+            document.getElementById('solarsystem').style.height = '2rem';
+            document.getElementById('sol-img').style.width = '3.6rem';
+            Object.keys(solarSystem).forEach(instance => {
+                document.getElementById(instance).style.width = (solarSystem[instance]._D*scale/rem*scaleFactor).toString()+'rem';
+                document.getElementById(instance).style.height = (solarSystem[instance]._D*scale/rem*scaleFactor).toString()+'rem';
+                document.getElementById(instance.toString()+'-img').style.width = (solarSystem[instance]._D*1.2*scale/rem*scaleFactor).toString()+'rem';
+                document.querySelector('#'+instance+' p').style.setProperty('padding-bottom', solarSystem[instance]._D*scale/rem*scaleFactor);
+                document.querySelector('#'+instance+' p').style.setProperty('padding-left', (solarSystem[instance]._D*scale/rem*scaleFactor).toString()+'rem');
+            });
+            break;
+        default:
+            return;
     }
 }
 

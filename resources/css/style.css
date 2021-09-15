@@ -19,7 +19,7 @@ $green:     #859900
 @import url('https://fonts.googleapis.com/css2?family=Kaisei+HarunoUmi:wght@400;700&display=swap');
 
 html {
-    font-size: 2vh;
+    font-size: 12px;
     font-family: 'Kaisei HarunoUmi', serif;
 }
 
@@ -236,15 +236,23 @@ header>h1 {
 
 #settings>*>* {
     padding-bottom: 1vh;
+    vertical-align: middle;
+}
+
+#settings>*>*>p {
+    vertical-align: middle;
+    display: inline-block;
 }
 
 #canvas-settings>*>* {
     display: inline-block;
+    vertical-align: middle;
 }
 
 #canvas-settings>div {
     display: inline-flex;
     justify-content: space-between;
+    vertical-align: middle;
 }
 
 #canvas-settings a {
@@ -269,7 +277,23 @@ header>h1 {
 }
 
 #settings form>input[type="text"] {
-    width: 3vw;
+    width: 3rem;
+    height: 1.2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: 'Kaisei HarunoUmi', serif;
+    background-color: #fdf6e3;
+}
+
+#settings form>input[type="button"] {
+    width: fit-content;
+    height: 2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: 'Kaisei HarunoUmi', serif;
+    background-color: #fdf6e3;
 }
 
 #timeline {
@@ -317,8 +341,8 @@ header>h1 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    height: 25px;
-    width: 25px;
+    height: 2rem;
+    width: 2rem;
     background-color: rgb(252, 227, 0);
     border-radius: 50%;
 }
@@ -333,37 +357,44 @@ header>h1 {
     height: 600px;
 }
 
-#solarsystem>img {
+#sol-img {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 5vw;
+    width: 3.6rem;
     height: auto;
 }
 
-#solarsystem img {
+#solarsystem>.planet img {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 1.9vw;
+    width: 2.4rem;
     height: auto;
 }
 
-#solarsystem p {
-    padding-bottom: 2vh;
-    padding-left: 1.7vw;
+#solarsystem>.planet p {
+    padding-bottom: 2.2rem;
+    padding-left: 2.2rem;
+    font-size: 1.5rem;
 }
 
 #solarsystem #moon>p {
-    padding-bottom: 0 !important;
+    position: absolute;
+    left: 1rem;
+    top: 0.7rem;
+    font-size: 1rem;
 }
 
 .planet {
     position: absolute;
-    height: 1.7vw;
-    width: 1.7vw;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 2rem;
+    width: 2rem;
     border-radius: 50%;
     display: inline-block;
     text-align: center;
