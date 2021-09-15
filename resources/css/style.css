@@ -156,7 +156,7 @@ header>h1 {
     position: relative;
     box-sizing: border-box;
     width: 100%;
-    height: 95%;
+    height: 92%;
 }
 
 #adam {
@@ -177,20 +177,43 @@ header>h1 {
     transition: width 2s;
 }
 
-#setting-icon {
+#setting-link {
     position: absolute;
-    right: 1vw;
-    top: 1vh;
-    font-size: 1rem;
+    right: 0.8rem;
+    top: 0.8rem;
+    font-size: 1.3rem;
     width: fit-content;
+    z-index: 10;
+    opacity: 0.5;
+    transition: 200ms ease-in-out;
+}
+
+#setting-link:hover {
+    opacity: 1;
 }
 
 #settings {
     width: 30%;
-    display: flex;
+    display: inline-flex;
     flex-flow: column;
-    padding: 4vh 2vw;
+    padding: 2.5rem 1.5rem;
+    padding-bottom: 1.2rem;
     transition: right 2000ms, ease-in;
+    font-size: 1.2vw;
+}
+
+@media screen and (max-width: 800px) {
+    #settings {
+        position: absolute;
+        height: 60%;
+        width: 90%;
+        font-size: 2.5vw;
+        flex-flow: column wrap;
+    }
+    #settings>* {
+        width: 45%;
+        height: auto;
+    }
 }
 
 #settings>* {
@@ -198,26 +221,23 @@ header>h1 {
     color: #93a1a1;
     width: calc(100%-4vw);
     height: (100%/3);
-    padding: 2vh 2vw;
-    margin-bottom: 3vh;
-    border-radius: 1vh;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 1rem;
     z-index: 5;
 }
 
 #settings h3 {
-    font-size: 1.2rem;
+    font-size: 1.2em;
 }
 
 #planet-settings {
     overflow-y: scroll;
-}
-
-#planet-settings input[type="button"] {
-    width: 3vw;
+    height: 70%;
 }
 
 #planet-settings table img {
-    width: 1.9vw;
+    width: 1.8em;
     height: auto;
     filter: invert(100%);
 }
@@ -235,7 +255,7 @@ header>h1 {
 }
 
 #settings>*>* {
-    padding-bottom: 1vh;
+    padding-bottom: 1rem;
     vertical-align: middle;
 }
 
@@ -262,6 +282,8 @@ header>h1 {
 #speed-settings {
     display: flex;
     flex-flow: column nowrap;
+    padding-bottom: 0;
+    margin-bottom: 0;
 }
 
 #speed-settings>*>* {
@@ -277,10 +299,10 @@ header>h1 {
 }
 
 #settings form>input[type="text"] {
-    width: 3rem;
-    height: 1.2rem;
+    width: 3em;
+    height: 1.2em;
     text-align: center;
-    font-size: 0.8rem;
+    font-size: 0.8em;
     font-weight: 700;
     font-family: 'Kaisei HarunoUmi', serif;
     background-color: #fdf6e3;
@@ -288,9 +310,9 @@ header>h1 {
 
 #settings form>input[type="button"] {
     width: fit-content;
-    height: 2rem;
+    height: 2em;
     text-align: center;
-    font-size: 0.8rem;
+    font-size: 0.8em;
     font-weight: 700;
     font-family: 'Kaisei HarunoUmi', serif;
     background-color: #fdf6e3;
@@ -303,17 +325,18 @@ header>h1 {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 1vh 2vw;
+    padding: 1rem 1rem;
     color: #93a1a1;
 }
 
 #timeline>* {
     background-color: #002b36;
     /*margin-right: 2vw;*/
-    border-radius: 1vh;
+    border-radius: 1rem;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
     z-index: 5;
 }
 
@@ -321,19 +344,60 @@ header>h1 {
     color: #93a1a1;
 }
 
+#timeline form>input[type="date"] {
+    width: 10rem;
+    height: 1.2rem;
+    text-align: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    font-family: 'Kaisei HarunoUmi', serif;
+    background-color: #fdf6e3;
+}
+
 #timeline-slider {
     width: 60%;
-    height: 3vh;
+    height: 2rem;
+}
+
+#play-button {
+    transition: all ease-in-out 100ms;
+}
+
+#play-button:hover {
+    color: white;
+}
+
+#date-range {
+    -webkit-appearance: auto;
+    align-content: right;
+    width: 94%;
+    margin-left: 0.7rem;
+    opacity: 0.5;
+    transition: ease-in-out 100ms;
+    background: #586e75;
+}
+
+#date-range:hover {
+    opacity: 1;
+}
+
+#date-range::-webkit-slider-thumb {
+    -webkit-appearance: auto;
+    appearance: none;
+    width: 0.3rem;
+    height: 2rem;
+    background: #04AA6D;
+    cursor: pointer;
 }
 
 #datebox {
     width: 20%;
-    height: 3vh;
+    height: 2rem;
 }
 
 #days {
     width: 20%;
-    height: 3vh;
+    height: 2rem;
 }
 
 #solarsystem {

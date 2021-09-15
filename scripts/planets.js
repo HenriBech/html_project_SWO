@@ -255,6 +255,7 @@ function frame() {
         d = -35000;
     } else {
       d+=step;
+      document.getElementById("date-range").value = d;
       updateSolarSystem(d);
       position(scale);
       document.getElementById("d").innerHTML = Math.round(d);
@@ -311,24 +312,59 @@ function plusScale() {
     scale += 10;
     updateScale();
 }
+
+var lastStep;
+
 function updateStep() {
+    if (!(step===0)) {
+        if (lastStep==0) {togglePlayIcon();} 
+    } else {
+        if (lastStep!=0) {togglePlayIcon();}
+    }
     document.getElementById("step-form").value = step;
+    lastStep = step;
 }
 function minusStep() {
+    if (savedStep) {
+        step = savedStep;
+        savedStep = false;
+    }
     step--;
     updateStep();
 }
 function plusStep() {
+    if (savedStep) {
+        step = savedStep;
+        savedStep = false;
+    }
     step++;
     updateStep();
 }
-function stopStep() {
-    step = 0;
-    updateStep();
+
+savedStep = false;
+
+function togglePlay() {
+    if (!(step===0)) {
+        savedStep = step;
+        step = 0;
+        updateStep();
+        document.getElementById("step-form").value = savedStep;
+
+    } else {
+        if (savedStep) {
+            step = savedStep;
+            savedStep = false;
+            updateStep();
+        } else {
+            step = 1;
+            updateStep();
+        }
+    }
 }
 
+
 function hideElement(name) {
-    if (document.getElementById(name).style.display === 'none'){
+    if (document.getElementById(name).style.display == 'none'){
         document.getElementById(name).style.display = 'inline-flex';
     } else {
         document.getElementById(name).style.display = 'none';
@@ -349,6 +385,9 @@ function focusElement(name) {
 
 function toggleVisIcon(name) {
     name.classList.toggle('fa-eye-slash');
+}
+function togglePlayIcon() {
+    document.getElementById('play-icon').classList.toggle('fa-play');
 }
 
 var focus = {focused: false, focus: 'none'};
@@ -426,7 +465,7 @@ function setPlanetSize(mode) {
 
 /* settings */ 
 
-var d = -35000;
+var d = 0;
 
 var scale = 20;
 position(scale);
@@ -445,9 +484,19 @@ document.getElementById("step-plus").addEventListener("click", plusStep);
 document.getElementById("step-form").addEventListener("keyup", event => {
     if(event.key == "Enter") {// Check for Enter-key
     step = Number(document.getElementById("step-form").value);
+    savedStep = false;
     updateStep();
     } else {return;}
     event.preventDefault();
+});
+document.getElementById("date-range").addEventListener("input", event => {
+    d = Number(document.getElementById("date-range").value);
+});
+document.getElementById("date-input").addEventListener("input", event => {
+    console.log(document.getElementById("date-input").value)
+    if(event.key == "Enter") {
+        console.log(document.getElementById("date-input").value)}
+    //d = Number(document.getElementById("date-input").value);
 });
 //drawOrbit(solarSystem.mars, document.getElementById('mars-orbit'), solarSystem.mars.epoch);
 
