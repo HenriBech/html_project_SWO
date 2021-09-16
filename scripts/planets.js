@@ -1,5 +1,3 @@
-//const calc = require('./modules/calc.js')
-
 const calc = {
     Y: 365.256, // length of an earth-year in days
 
