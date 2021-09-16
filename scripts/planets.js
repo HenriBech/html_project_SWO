@@ -15,8 +15,18 @@ const calc = {
     
     getEpoch(y, m, D) {
         // computes days since 1.1.2000
-        // valid between 1900 and 2100
-        return 367*y - 7 * calc.div(( y + calc.div((m+9), 12) ), 4) + 275*calc.div(m,9) + D - 730530;
+        // doesn't work properly!
+        y = Number(y), m = Number(m), D = Number(D);
+        let date = new Date(y, m, D);
+        let date0 = new Date(2000, 1, 1);
+        diff = Math.ceil((date - date0)/(1000 * 60 * 60 * 24));
+        return diff;
+    },
+
+    getDate(d) {
+        let date = new Date('2000-01-01');
+        date.setDate(date.getDate() + d);
+        return [('0' + date.getDate()).slice(-2), ('0' + (date.getMonth()+1)).slice(-2), date.getFullYear()].join('.');
     },
 
     getAU(D) {
@@ -258,7 +268,7 @@ function frame() {
       document.getElementById("date-range").value = d;
       updateSolarSystem(d);
       position(scale);
-      document.getElementById("d").innerHTML = Math.round(d);
+      document.getElementById("d").innerHTML = (calc.getDate(d)+' d: '+d);
     }
   }
 
@@ -446,7 +456,7 @@ function setPlanetSize(mode) {
             break;
         case 'relative':
             let scaleFactor = 2000;
-            solarSystem.moon._a0 = 0.13;
+            solarSystem.moon._a0 = 0.001*scale;
             document.getElementById('solarsystem').style.width = '2rem';
             document.getElementById('solarsystem').style.height = '2rem';
             document.getElementById('sol-img').style.width = '3.6rem';
@@ -493,10 +503,18 @@ document.getElementById("date-range").addEventListener("input", event => {
     d = Number(document.getElementById("date-range").value);
 });
 document.getElementById("date-input").addEventListener("input", event => {
-    console.log(document.getElementById("date-input").value)
-    if(event.key == "Enter") {
-        console.log(document.getElementById("date-input").value)}
+    input = document.getElementById("date-input").value;
+    d = calc.getEpoch(...input.split('-'));
+    // if(event.key == "Enter") {
+    //     console.log(document.getElementById("date-input").value)}
     //d = Number(document.getElementById("date-input").value);
+});
+document.getElementById("canvas").addEventListener('keydown', event =>{
+    console.log(event.code)
+    if(event.code == "Space") {
+        togglePlay();
+        console.log(event.code)
+    }
 });
 //drawOrbit(solarSystem.mars, document.getElementById('mars-orbit'), solarSystem.mars.epoch);
 
