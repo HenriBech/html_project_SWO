@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Henri</title>
+    <title>Planets</title>
+    <link rel="icon" href="./resources/images/planets/saturn.svg">
     <link rel="stylesheet" href="resources/css/reset.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
     <link rel="stylesheet" href="resources/css/style.css">
-    <!--<script data-main="scripts/main" src="./scripts/require.js"></script>-->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.4.2.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-joda/1.11.0/js-joda.min.js"></script>
-    <script type="text/javascript" src="./scripts/planets.js" async></script>
+    <script type="module" src="http://127.0.0.1:5500/scripts/planets.js" async></script>
 </head>
 <body>
     <nav class="navbar">
@@ -19,13 +19,30 @@
             (:
         </p>
         <ul>
-            <li><a href="">Home</a></li>
-            <li><a href="">About</a></li>
-            <li><a href="">Contact</a></li>
+            <li><a href="./content.html">Home</a></li>
+            <li id="impressum-link" onclick="showImpressum()"><p>Legal Notice</p></li>
+            <li><p onclick="hideElement('contacts')">Contact</p><div id="contacts" style="display: none;">
+                <a href="https://www.instagram.com/h.enri.b" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://github.com/HenriBech" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://open.spotify.com/user/henrislistening" target="_blank"><i class="fab fa-spotify"></i></a>
+            </div></li>
         </ul>
     </nav>
     <div id="offset"></div>
-    <section class="full" id="first-post">
+    <section class="full first-post" id="impressum" style="display: none;">
+        <div style="width: 50%; min-width: 300px; padding: 3rem; overflow-y: scroll;"><h1>Impressum</h1><p>Angaben gemäß § 5 TMG</p><p>Henri Bechert <br> 
+            Kreuzstraße 8<br> 
+            04103 Leipzig <br> 
+            </p><p> <strong>Vertreten durch: </strong><br>
+            Henri Bechert<br>
+            </p><p><strong>Kontakt:</strong> <br>
+            Telefon: 0176-61447230<br>
+            E-Mail: <a href='mailto:henri.bechert@softwareone.com' target="_blank">henri.bechert@softwareone.com</a></br></p><p><strong>Haftungsausschluss: </strong><br><br><strong>Haftung für Links</strong><br><br>
+            Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.<br><br><strong>Urheberrecht</strong><br><br>
+            Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet. Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.</p><br>
+        </div>     
+    </section>
+    <section class="full first-post" id="planets">
         <div id="view">
             <div id="adam" style="display: none;">
                 <object type="image/svg+xml" data="./resources/images/le_corbusiers_adam/neptun.svg"></object>
@@ -39,7 +56,10 @@
             </div>
             <div id="canvas">
                 <div id="solarsystem">
-                    <img id="sol-img" src="./resources/images/planets/sun.svg" alt="sun by Muhammad Atiq from the Noun Project">
+                    <!-- <div style="position: absolute; display: flex;"><canvas class="orbit" id="mars-orbit"></canvas></div> -->
+                    <div id="sol" style="display: none;">
+                        <img id="sol-img" src="./resources/images/planets/sun.svg" alt="sun by Muhammad Atiq from the Noun Project">
+                    </div>
                     <div class="planet" id="sun"><img id="sun-img" src="./resources/images/planets/earth.svg" alt="Earth by Kevin White from the Noun Project">
                         <p class="astro">🜨</p>
                         <div class="planet" id="moon"><img id="moon-img" src="./resources/images/planets/moon.svg" alt="Moon by Bakunetsu Kaito from the Noun Project">
@@ -61,7 +81,8 @@
                         <p class="astro">♆</p></div>
                 </div>
             </div>
-            <div><a href="#" onclick="hideElement('settings')" id="setting-link"><i class="fas fa-cog" id="setting-icon"></i></a></div>
+            <div id="credit" style="display: none;"><p>calculations based on work by</p><a href="https://stjarnhimlen.se/comp/ppcomp.html" target="_blank">Paul Schlyter</a></div>
+            <div><a href="#" onclick="hideElement('settings'); hideElement('credit')" id="setting-link"><i class="fas fa-cog" id="setting-icon"></i></a></div>
             <div id="settings" style="display: none;">
                 <div id="planet-settings">
                     <h3>Planet Settings</h3>
@@ -78,56 +99,56 @@
                             <tr id="mercury-setting">
                                 <th><img src="./resources/images/planets/mercury.svg"> Mercury</th>
                                 <td><a href="#" onclick="hideElement('mercury')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement('')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="focusElement('')"><i onclick="toggleFocusIcon(this)" class="far fa-circle"></i></a></td>
+                                <td><a href="#" onclick="hideElement('mercury-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#"><i id="focus-mercury" onclick="toggleFocusIcon(this, 'mercury')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="venus-setting">
                                 <th><img src="./resources/images/planets/venus.svg"> Venus</th>
                                 <td><a href="#" onclick="hideElement('venus')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement('')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="focusElement('')"><i onclick="toggleFocusIcon(this)" class="far fa-circle"></i></a></td>
+                                <td><a href="#" onclick="hideElement('venus-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#"><i id="focus-venus" onclick="toggleFocusIcon(this, 'venus')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="sun-setting">
                                 <th><img src="./resources/images/planets/earth.svg"> Earth</th>
                                 <td><a href="#" onclick="hideElement_vis('sun')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement_vis('')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="focusElement('')"><i onclick="toggleFocusIcon(this)" class="far fa-circle"></i></a></td>
+                                <td><a href="#" onclick="hideElement_vis('sun-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#"><i id="focus-sun" onclick="toggleFocusIcon(this, 'sun')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="moon-setting">
                                 <th><img src="./resources/images/planets/moon.svg"> Moon</th>
                                 <td><a href="#" onclick="hideElement_vis('moon')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement_vis('')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="focusElement('')"><i onclick="toggleFocusIcon(this)" class="far fa-circle"></i></a></td>
+                                <td><a href="#" onclick="hideElement_vis('moon-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#"><i id="focus-moon" onclick="toggleFocusIcon(this, 'moon')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="mars-setting">
                                 <th><img src="./resources/images/planets/mars.svg"> Mars</th>
                                 <td><a href="#" onclick="hideElement('mars')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement('')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="focusElement('')"><i onclick="toggleFocusIcon(this)" class="far fa-circle"></i></a></td>
+                                <td><a href="#" onclick="hideElement('mars-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#"><i id="focus-mars" onclick="toggleFocusIcon(this, 'mars')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="jupiter-setting">
                                 <th><img src="./resources/images/planets/jupiter.svg"> Jupiter</th>
                                 <td><a href="#" onclick="hideElement('jupiter')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement('')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="focusElement('')"><i onclick="toggleFocusIcon(this)" class="far fa-circle"></i></a></td>
+                                <td><a href="#" onclick="hideElement('jupiter-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#"><i id="focus-jupiter" onclick="toggleFocusIcon(this, 'jupiter')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="saturn-setting">
                                 <th><img src="./resources/images/planets/saturn.svg"> Saturn</th>
                                 <td><a href="#" onclick="hideElement('saturn')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement('')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="focusElement('')"><i onclick="toggleFocusIcon(this)" class="far fa-circle"></i></a></td>
+                                <td><a href="#" onclick="hideElement('saturn-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#"><i id="focus-saturn" onclick="toggleFocusIcon(this, 'saturn')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="uranus-setting">
                                 <th><img src="./resources/images/planets/uranus.svg"> Uranus</th>
                                 <td><a href="#" onclick="hideElement('uranus')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement('')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="focusElement('')"><i onclick="toggleFocusIcon(this)" class="far fa-circle"></i></a></td>
+                                <td><a href="#" onclick="hideElement('uranus-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#"><i id="focus-uranus" onclick="toggleFocusIcon(this, 'uranus')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="neptune-setting">
                                 <th><img src="./resources/images/planets/neptune.svg"> Neptune</th>
                                 <td><a href="#" onclick="hideElement('neptune')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement('')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="focusElement('')"><i onclick="toggleFocusIcon(this)" class="far fa-circle"></i></a></td>
+                                <td><a href="#" onclick="hideElement('neptune-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#"><i id="focus-neptune" onclick="toggleFocusIcon(this, 'neptune')" class="far fa-circle"></i></a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -146,13 +167,13 @@
                         <p>Planet-size: </p>
                         <form action="javascript:void(0);">
                             <input type="button" value="Uniform" onclick="setPlanetSize('uniform')">
-                            <input type="button" value="True" onclick="setPlanetSize('true')">
+                            <input type="button" value="True" onclick="setPlanetSize('true'); setTrueRes();">
                             <input type="button" value="Relative" onclick="setPlanetSize('relative')">
                         </form>
                     </div>
                     <div>
                         <p>Orbits: </p>
-                        <a href="#" onclick="hideElement('')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a>
+                        <a href="#" onclick="hideElement('')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a>
                     </div>
                 </div>
                 <div id="speed-settings">

@@ -1,3 +1,5 @@
+const Y = 365.256; // length of an earth-year in days
+
 function div(a, b) {
     // Integer division
     return a/b>>0;
@@ -10,8 +12,23 @@ function modulateCircle(rad) {
 
 function getEpoch(y, m, D) {
     // computes days since 1.1.2000
-    // valid between 1900 and 2100
-    return 367*y - 7 * div(( y + div((m+9), 12) ), 4) + 275*div(m,9) + D - 730530;
+    // doesn't work properly!
+    y = Number(y), m = Number(m), D = Number(D);
+    let date = new Date(y, m, D);
+    let date0 = new Date(2000, 1, 1);
+    let diff = Math.ceil((date - date0)/(1000 * 60 * 60 * 24));
+    return diff;
+}
+
+function getDate(d) {
+    let date = new Date('2000-01-01');
+    date.setDate(date.getDate() + d);
+    return [('0' + date.getDate()).slice(-2), ('0' + (date.getMonth()+1)).slice(-2), date.getFullYear()].join('.');
+}
+
+function getAU(D) {
+    // returns the distance D (km) in AU
+    return D/1.495978707e+8;
 }
 
 function getRadians(deg) {
@@ -29,6 +46,4 @@ function ecl(d) {
     return getRadians(23.4393 - 3.563E-7 * d);
 }
 
-const Y = 365.256; // length of an earth-year in days
-
-export { y_earth as Y, div, modulateCircle, getEpoch, getDegree, getRadians, ecl };
+export {Y, div, modulateCircle, getEpoch, getDate, getAU, getRadians, getDegree, ecl};
