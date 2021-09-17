@@ -9,7 +9,10 @@
     <link rel="stylesheet" href="resources/css/reset.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
     <link rel="stylesheet" href="resources/css/style.css">
-    <script src="https://cdn.plot.ly/plotly-2.4.2.min.js"></script>
+    <!-- <script type="module">
+        import * as d3 from "https://cdn.skypack.dev/d3@7";
+        const div = d3.selectAll("div");    
+    </script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-joda/1.11.0/js-joda.min.js"></script>
     <script type="module" src="http://127.0.0.1:5500/scripts/planets.js" async></script>
 </head>
@@ -56,8 +59,8 @@
             </div>
             <div id="canvas">
                 <div id="solarsystem">
-                    <!-- <div style="position: absolute; display: flex;"><canvas class="orbit" id="mars-orbit"></canvas></div> -->
-                    <div id="sol" style="display: none;">
+                    <div id="orbits"></div>
+                    <div id="sol" style="display: flex;">
                         <img id="sol-img" src="./resources/images/planets/sun.svg" alt="sun by Muhammad Atiq from the Noun Project">
                     </div>
                     <div class="planet" id="sun"><img id="sun-img" src="./resources/images/planets/earth.svg" alt="Earth by Kevin White from the Noun Project">
@@ -99,7 +102,7 @@
                             <tr id="mercury-setting">
                                 <th><img src="./resources/images/planets/mercury.svg"> Mercury</th>
                                 <td><a href="#" onclick="hideElement('mercury')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement('mercury-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#" onclick="drawOrbit('mercury')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
                                 <td><a href="#"><i id="focus-mercury" onclick="toggleFocusIcon(this, 'mercury')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="venus-setting">

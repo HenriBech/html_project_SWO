@@ -196,6 +196,13 @@ header>h1 {
     transition: width 2s;
 }
 
+#orbits {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
 .orbit {
     position: absolute;
     top: 50%;

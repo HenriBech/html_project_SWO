@@ -1,5 +1,7 @@
 import * as calc from "http://127.0.0.1:5500/scripts/modules/calc.js";
 import * as astro from "http://127.0.0.1:5500/scripts/modules/astroCalc.js";
+import * as d3 from "https://cdn.skypack.dev/d3@7";
+const div = d3.selectAll("div"); 
 
 const solarSystem = {
     sun: new astro.earthElement(...Object.values(astro.solarSystem.earth)),
@@ -247,21 +249,57 @@ function setTrueRes() {
 /* Function for displaying planetary orbits */
 // doesn't fucking work
 
-function drawOrbit(instance, dom, epoch=0, n=10) {
+function calcOrbit(instance, epoch=0, n=10) {
     const T = instance._P*calc.Y;
     var ellipse = [];
     for (let i = 0; i < n; i++) {
-        instance.elementAt(epoch+i*T/n);
-        let pos = instance.pos;
-        pos.x *= 100;
-        pos.y *= 100;
+        solarSystem[instance].elementAt(epoch+i*T/n);
+        let pos = solarSystem[instance].pos;
+        pos.x *= scale;
+        pos.y *= scale;
         ellipse.push(pos);
     }
-    var trace1 = {
-        x: [1, 2, 3, 4],
-        y: [10, 15, 13, 17],
-        type: 'scatter'
-      };
+    return ellipse;
+}
+
+function plotEllipse(data) {
+    const svg = d3.create("svg")
+        .attr("viewBox", [0, 0, 400, 400]);
+
+    // svg.append("g")
+    //     .call(xAxis);
+
+    // svg.append("g")
+    //     .call(yAxis);
+
+    // svg.append("g")
+    //     .call(grid);
+
+    svg.append("g")
+        .attr("stroke", "steelblue")
+        .attr("stroke-width", 1.5)
+        .attr("fill", "none")
+    .selectAll("circle")
+    .data(data)
+    // .join("circle")
+    //     .attr("cx", d => x(d.x))
+    //     .attr("cy", d => y(d.y))
+    //     .attr("r", 3);
+
+    svg.append("g")
+        .attr("font-family", "sans-serif")
+        .attr("font-size", 10)
+    .selectAll("text")
+    .data(data)
+
+    return svg.node();
+}
+
+function drawOrbit(instance) {
+    let data = calcOrbit(instance, d);
+    let canvas = plotEllipse(data);
+    console.log(canvas)
+    d3.select("orbits").append(canvas);
 }
 
 /*  make functions available in html */
@@ -282,6 +320,7 @@ window.toggleFocusIcon = toggleFocusIcon;
 window.setPlanetSize = setPlanetSize;
 window.setTrueRes = setTrueRes;
 window.showImpressum = showImpressum;
+window.drawOrbit = drawOrbit;
 
 /* event handling */ 
 
