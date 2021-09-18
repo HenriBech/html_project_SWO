@@ -9,10 +9,6 @@
     <link rel="stylesheet" href="resources/css/reset.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
     <link rel="stylesheet" href="resources/css/style.css">
-    <!-- <script type="module">
-        import * as d3 from "https://cdn.skypack.dev/d3@7";
-        const div = d3.selectAll("div");    
-    </script> -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-joda/1.11.0/js-joda.min.js"></script>
     <script type="module" src="http://127.0.0.1:5500/scripts/planets.js" async></script>
 </head>
@@ -108,49 +104,49 @@
                             <tr id="venus-setting">
                                 <th><img src="./resources/images/planets/venus.svg"> Venus</th>
                                 <td><a href="#" onclick="hideElement('venus')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement('venus-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#" onclick="drawOrbit('venus')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
                                 <td><a href="#"><i id="focus-venus" onclick="toggleFocusIcon(this, 'venus')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="sun-setting">
                                 <th><img src="./resources/images/planets/earth.svg"> Earth</th>
                                 <td><a href="#" onclick="hideElement_vis('sun')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement_vis('sun-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#" onclick="drawOrbit('sun')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
                                 <td><a href="#"><i id="focus-sun" onclick="toggleFocusIcon(this, 'sun')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="moon-setting">
                                 <th><img src="./resources/images/planets/moon.svg"> Moon</th>
                                 <td><a href="#" onclick="hideElement_vis('moon')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement_vis('moon-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#" onclick="drawOrbit('moon')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
                                 <td><a href="#"><i id="focus-moon" onclick="toggleFocusIcon(this, 'moon')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="mars-setting">
                                 <th><img src="./resources/images/planets/mars.svg"> Mars</th>
                                 <td><a href="#" onclick="hideElement('mars')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement('mars-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#" onclick="drawOrbit('mars')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
                                 <td><a href="#"><i id="focus-mars" onclick="toggleFocusIcon(this, 'mars')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="jupiter-setting">
                                 <th><img src="./resources/images/planets/jupiter.svg"> Jupiter</th>
                                 <td><a href="#" onclick="hideElement('jupiter')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement('jupiter-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#" onclick="drawOrbit('jupiter')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
                                 <td><a href="#"><i id="focus-jupiter" onclick="toggleFocusIcon(this, 'jupiter')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="saturn-setting">
                                 <th><img src="./resources/images/planets/saturn.svg"> Saturn</th>
                                 <td><a href="#" onclick="hideElement('saturn')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement('saturn-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#" onclick="drawOrbit('saturn')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
                                 <td><a href="#"><i id="focus-saturn" onclick="toggleFocusIcon(this, 'saturn')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="uranus-setting">
                                 <th><img src="./resources/images/planets/uranus.svg"> Uranus</th>
                                 <td><a href="#" onclick="hideElement('uranus')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement('uranus-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#" onclick="drawOrbit('uranus')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
                                 <td><a href="#"><i id="focus-uranus" onclick="toggleFocusIcon(this, 'uranus')" class="far fa-circle"></i></a></td>
                             </tr>
                             <tr id="neptune-setting">
                                 <th><img src="./resources/images/planets/neptune.svg"> Neptune</th>
                                 <td><a href="#" onclick="hideElement('neptune')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="hideElement('neptune-orbit')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
+                                <td><a href="#" onclick="drawOrbit('neptune')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
                                 <td><a href="#"><i id="focus-neptune" onclick="toggleFocusIcon(this, 'neptune')" class="far fa-circle"></i></a></td>
                             </tr>
                         </tbody>
@@ -170,7 +166,7 @@
                         <p>Planet-size: </p>
                         <form action="javascript:void(0);">
                             <input type="button" value="Uniform" onclick="setPlanetSize('uniform')">
-                            <input type="button" value="True" onclick="setPlanetSize('true'); setTrueRes();">
+                            <input type="button" value="True" onclick="setPlanetSize('true');">
                             <input type="button" value="Relative" onclick="setPlanetSize('relative')">
                         </form>
                     </div>

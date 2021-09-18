@@ -122,7 +122,7 @@ a:link, a:visited, a:hover, a:active {
     /*border: 3px solid red;*/
 }
 #image_me {
-    width: 20vw;
+    width: 40vh;
 }
 @keyframes bounce{
     0%   { transform: rotate(-90deg) scale(1,1)      translateX(0);     }
@@ -141,7 +141,12 @@ a:link, a:visited, a:hover, a:active {
     opacity: 0;
     transition: all 0.5s;
 }
-#hoverbox:hover #text1 {
+#hoverbox #smile {
+    color: #eee8d5;
+    font-size: 20vh;
+}
+
+#hoverbox:hover #smile {
     opacity: 1;
 }
 .logo {
@@ -208,9 +213,6 @@ header>h1 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 400px;
-    height: 400px;
-    border: orangered 1px solid;
 }
 
 #credit {
@@ -469,7 +471,6 @@ header>h1 {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    border: royalblue 1px solid;
     width: 600px;
     height: 600px;
 }

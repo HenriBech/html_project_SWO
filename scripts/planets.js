@@ -1,7 +1,6 @@
 import * as calc from "http://127.0.0.1:5500/scripts/modules/calc.js";
 import * as astro from "http://127.0.0.1:5500/scripts/modules/astroCalc.js";
 import * as d3 from "https://cdn.skypack.dev/d3@7";
-const div = d3.selectAll("div"); 
 
 const solarSystem = {
     sun: new astro.earthElement(...Object.values(astro.solarSystem.earth)),
@@ -14,6 +13,17 @@ const solarSystem = {
     uranus: new astro.planetElement(...Object.values(astro.solarSystem.uranus)),
     neptune: new astro.planetElement(...Object.values(astro.solarSystem.neptune))
 }
+
+// add colors
+solarSystem["mercury"].color = '#cb4b16';
+solarSystem["venus"].color = '#d33682';
+solarSystem["sun"].color = '#268bd2';
+solarSystem["moon"].color = '#93a1a1';
+solarSystem["mars"].color = '#dc322f';
+solarSystem["jupiter"].color = '#b58900';
+solarSystem["saturn"].color = '#859900';
+solarSystem["uranus"].color = '#2aa198';
+solarSystem["neptune"].color = '#6c71c4';
 
 /* functions for displaying the solar system */
 
@@ -239,20 +249,13 @@ function setPlanetSize(mode) {
     }
 }
 
-function setTrueRes() {
-    scale = 500;
-    updateScale();
-    step = 0.1;
-    updateStep();
-}
-
 /* Function for displaying planetary orbits */
 // doesn't fucking work
 
-function calcOrbit(instance, epoch=0, n=10) {
-    const T = instance._P*calc.Y;
+function calcOrbit(instance, epoch=0, n=100) {
+    const T = solarSystem[instance]._P*calc.Y;
     var ellipse = [];
-    for (let i = 0; i < n; i++) {
+    for (let i = 0; i < n+1; i++) {
         solarSystem[instance].elementAt(epoch+i*T/n);
         let pos = solarSystem[instance].pos;
         pos.x *= scale;
@@ -262,44 +265,55 @@ function calcOrbit(instance, epoch=0, n=10) {
     return ellipse;
 }
 
-function plotEllipse(data) {
-    const svg = d3.create("svg")
-        .attr("viewBox", [0, 0, 400, 400]);
+function plotEllipse(data, color) {
+    // set the dimensions and margins of the graph
+    var margin = {top: 0, right: 0, bottom: 0, left: 0},
+    parentDim = d3.select("#canvas").node().getBoundingClientRect(),
+    width = parentDim.width - margin.left - margin.right,
+    height = parentDim.height - margin.top - margin.bottom;
 
-    // svg.append("g")
-    //     .call(xAxis);
+    // append the svg object to the body of the page
+    var svg = d3.select("#orbits")
+      .append("svg")
+        .attr("class", "orbit")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.top + margin.bottom)
+      .append("g")
+        .attr("transform",
+              "translate(" + margin.left + "," + margin.top + ")");
 
-    // svg.append("g")
-    //     .call(yAxis);
-
-    // svg.append("g")
-    //     .call(grid);
-
+    // Add X axis
+    var x = d3.scaleLinear()
+    .domain([-width/2, width/2])
+    .range([ 0, width ]);
     svg.append("g")
-        .attr("stroke", "steelblue")
-        .attr("stroke-width", 1.5)
-        .attr("fill", "none")
-    .selectAll("circle")
-    .data(data)
-    // .join("circle")
-    //     .attr("cx", d => x(d.x))
-    //     .attr("cy", d => y(d.y))
-    //     .attr("r", 3);
+    .attr("transform", "translate(0," + height + ")")
+    // .call(d3.axisBottom(x));
 
+    // Add Y axis
+    var y = d3.scaleLinear()
+    .domain([-height/2, height/2])
+    .range([ height, 0]);
     svg.append("g")
-        .attr("font-family", "sans-serif")
-        .attr("font-size", 10)
-    .selectAll("text")
-    .data(data)
+    // .call(d3.axisLeft(y));
 
-    return svg.node();
+    // Draw Orbit
+    svg.append("path")
+    .datum(data)
+    .attr("fill", "none")
+    .attr("stroke", color)
+    .attr("stroke-width", 1.5)
+    .attr("d", d3.line()
+        .x(function(d) { return x(d.x) })
+        .y(function(d) { return y(d.y) })
+        )
+
+    return svg.nodes();
 }
 
 function drawOrbit(instance) {
     let data = calcOrbit(instance, d);
-    let canvas = plotEllipse(data);
-    console.log(canvas)
-    d3.select("orbits").append(canvas);
+    plotEllipse(data, solarSystem[instance].color);
 }
 
 /*  make functions available in html */
@@ -318,7 +332,6 @@ window.toggleHidIcon = toggleHidIcon;
 window.togglePlayIcon = togglePlayIcon;
 window.toggleFocusIcon = toggleFocusIcon;
 window.setPlanetSize = setPlanetSize;
-window.setTrueRes = setTrueRes;
 window.showImpressum = showImpressum;
 window.drawOrbit = drawOrbit;
 
