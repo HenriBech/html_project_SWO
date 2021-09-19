@@ -4,10 +4,10 @@ import * as d3 from "https://cdn.skypack.dev/d3@7";
 
 ////////////////////////// SETUP //////////////////////////////////////////////////
 // Add planets to solar system
-const solarSystem = {
-    "earth": new astro.earthElement(...Object.values(astro.solarSystem.earth)),
+const planets = {
     "mercury": new astro.planetElement(...Object.values(astro.solarSystem.mercury)),
     "venus": new astro.planetElement(...Object.values(astro.solarSystem.venus)),
+    "earth": new astro.earthElement(...Object.values(astro.solarSystem.earth)),
     "mars": new astro.planetElement(...Object.values(astro.solarSystem.mars)),
     "jupiter": new astro.planetElement(...Object.values(astro.solarSystem.jupiter)),
     "saturn": new astro.planetElement(...Object.values(astro.solarSystem.saturn)),
@@ -16,8 +16,8 @@ const solarSystem = {
 }
 
 const sun = new astro.astroElement(...Object.values(astro.solarSystem.sun));
-sun._x = 0; sun._Y = 0; // center solar-system
-sun.addOrbital(solarSystem);
+sun._x = 0; sun._y = 0; // center solar-system
+sun.addOrbital(planets);
 
 // Add moon to earth
 var moon = {"moon": new astro.planetElement(...Object.values(astro.solarSystem.moon))};
@@ -38,59 +38,105 @@ sun.orbital("neptune").color = '#6c71c4';  // Violet
 
 /* functions for displaying the solar system */
 
-// Prepare Data
-const data = [];
-for (const [name, el] of Object.entries(sun.getSuborbitals())) {
-    data.push({"name": name, "element": el});
-}
+class SIM {
+    constructor(system, scale, step) {
+        // read in data
+        this._system = system;
+        this._data = [];
+        for (const [name, el] of Object.entries(system.getSuborbitals())) {
+            this._data.push({"name": name, "element": el});
+        }
+        // set simulation parameters
+        this._day = 0;
+        this._scale = scale;
+        this._step = step;
+        this._scalor = 1; // scaling factor for planet sizes
+    }
+    // parameter getters and setters
+    get data() {return this._data;}
+    get d() {return this._day;}
+    get scale() {return this._scale;}
+    get step() {return this._step;}
+    set d(day) {this._day = day;}
+    set scale(scale) {this._scale = scale;}
+    set step(step) {this._step = step;}
+    set scaling(scalor) {this._scalor = scalor;}
 
-// Create empty svg for each element
-const canvas = d3.select("#canvas")
-    .selectAll("svg")
-    .data(data)
-    .enter()
-  .append("svg")
-    .attr("class", "planet center")
-    .attr("id", function(d){return d["name"]})
+    // Create empty svg for each element in data
+    setCanvas(target) {
+        this._target = target;
+        let canvas = d3.select(target)
+            .style("width", "100%")
+            .style("height", "100%")
+            .selectAll("svg")
+            .data(this.data)
+            .enter()
+          .append("svg")
+            .attr("class", "planet center")
+            .attr("id", function(d){return d["name"]})
+        // get canvas parameters
+        let parentDim = d3.select(target).node().getBoundingClientRect(),
+        width = parentDim.width,
+        height = parentDim.height;
+        d3.selectAll(".planet")
+            .style("width", "100%")
+            .style("height", "100%")
+            .attr("viewBox", [-width/2, -height/2, width, height].join(" "))
+        return canvas;
+    }
 
-function addPlanet(planet) {
-    d3.xml("http://127.0.0.1:5500/resources/images/planets/"+planet+".svg")
-        .then(d => {
-        d3.select("#"+planet).node().append(d.documentElement)
-        });
-}
+    addPlanets() {
+        this.data.forEach(datum => {
+            d3.select("#"+datum.name)
+              .append('circle')             // draw underlying circle
+                .attr('r', datum.element._D*this._scalor)
+                .attr('stroke', 'black')
+                .attr('fill', datum.element.color);
+            d3.xml("http://127.0.0.1:5500/resources/images/planets/"+datum.name+".svg")     // svg graphics
+                .then(function(d) {
+                    d3.select("#"+datum.name)
+                        .node()
+                      .append(d.documentElement)
+                });
+        })
+    }
 
-addPlanet("saturn")
+    planet(name) {return this._system.getSuborbitals()[name];}
 
-function position(scale) {
-    let offset = {x: 0, y: 0};
-    // if (focus.focus) {
-    //     offset.x = -solarSystem[focus.focus].pos.x;
-    //     offset.y = -solarSystem[focus.focus].pos.y;
-    // }
-    document.getElementById('sol').style.setProperty('top', 'calc(50% + '+offset.y*scale+'px)');
-    document.getElementById('sol').style.setProperty('left', 'calc(50% + '+offset.x*scale+'px)');
-    Object.keys(solarSystem).forEach(instance => {
-        document.getElementById(instance).style.setProperty('top', 'calc(50% + '+(solarSystem[instance].pos.y+offset.y)*scale+'px)');
-        document.getElementById(instance).style.setProperty('left', 'calc(50% + '+(solarSystem[instance].pos.x+offset.x)*scale+'px)');
-    });
-}
+    position(d) {
+        this.d = d;
+        let offset = {x: 0, y: 0};
+        // if (focus.focus) {
+        //     offset.x = -solarSystem[focus.focus].pos.x;
+        //     offset.y = -solarSystem[focus.focus].pos.y;
+        // }
+        this._system.elementAt(this.d); // update all elements
+        d3.selectAll("svg")
+          .select("circle")
+            .attr("cx", datum => {return ((datum.element.pos.x+offset.x)*this.scale).toString();})
+            .attr("cy", datum => {return ((datum.element.pos.y+offset.y)*this.scale).toString();})       
+    }
 
-function frame() {
-    if (0) {
-      clearInterval(id);
-    } else if (d>=35000) {
-        d = -35000;
-    } else {
-      d+=step;
-      document.getElementById("date-range").value = d;
-      updateSolarSystem(d);
-      position(scale);
-      document.getElementById("d").innerHTML = (calc.getDate(d));
+    frame() {
+        if (0) {
+        clearInterval(id);
+        } else if (this.d>=35000) {
+            this.d = -35000;
+        } else {
+        this.d+=this.step;
+        // document.getElementById("date-range").value = d;
+        this.position(this.d)
+        // document.getElementById("d").innerHTML = (calc.getDate(d));
+        }
     }
 }
 
-// setInterval(frame, 10); // update frame every 10ms
+const solarSystem = new SIM(sun, 20, 5);
+setInterval(function(){solarSystem.frame()}, 10); // update frame every 10ms
+
+solarSystem.setCanvas("#canvas");
+solarSystem.scaling = 40000;
+solarSystem.addPlanets();
 
 // /* functions for html-interaction */
 
