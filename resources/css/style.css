@@ -53,6 +53,9 @@ a:link, a:visited, a:hover, a:active {
     flex-flow: column;
     box-sizing: border-box;
 }
+.first-post {
+    height: 90vh;
+}
 .center {
     display: block;
     margin: 0;
@@ -62,6 +65,9 @@ a:link, a:visited, a:hover, a:active {
     -ms-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
 }
+
+/* Navbar */
+
 .navbar {
     display: inline-flex;
     flex-flow: nowrap;
@@ -111,109 +117,36 @@ a:link, a:visited, a:hover, a:active {
     height: 10vh;
     width: 100%;
 }
-.first-post {
-    height: 90vh;
-}
-#hover {
-    animation: bounce 2s infinite ease-in-out;
-}
-#hoverbox {
-    margin: 0;
-    /*border: 3px solid red;*/
-}
-#image_me {
-    width: 40vh;
-}
-@keyframes bounce{
-    0%   { transform: rotate(-90deg) scale(1,1)      translateX(0);     }
-    25%  { transform: rotate(-90deg) scale(.9,1.1)   translateX(0);     }
-    40%  { transform: rotate(-90deg) scale(1.1,.9)   translateX(-0.3vh);  }
-    58%  { transform: rotate(-90deg) scale(.95,1.05) translateX(0);     }
-    70%  { transform: rotate(-90deg) scale(1,1)      translateX(-.1vh); }
-    84%  { transform: rotate(-90deg) scale(1,1)      translateX(0);     }
-    100% { transform: rotate(-90deg) scale(1,1)      translateX(0);     }
-}
-#smile{
-    font-size: 5rem;
-    white-space: nowrap;
-    line-height: 8vh;
-    font-family: 'Times New Roman', Times, serif;
-    opacity: 0;
-    transition: all 0.5s;
-}
-#hoverbox #smile {
-    color: #eee8d5;
-    font-size: 20vh;
-}
 
-#hoverbox:hover #smile {
-    opacity: 1;
-}
 .logo {
     font-size: 3rem;
     font-family: 'Times New Roman', Times, serif;
-    animation: bounce 2s infinite ease-in-out;
     padding: 0.5vh 2vw;
-    color: #cb4b16;
-}
-#banner {
-    background-color: #eee8d5;
-    color: #073642;
-    margin-top: 1vh;
-    text-align: center;
-    padding: 1vh 0;
+    filter: invert(53%) sepia(22%) saturate(1305%) hue-rotate(199deg) brightness(82%) contrast(84%);
 }
 
-#banner_kopf{
-    height: 15vh;
+.logo:hover {
+    animation: bounce 2s infinite ease-in-out;
 }
 
-header>h1 {
-    z-index: 8;
+@keyframes bounce{
+    0%   { transform: scale(1,1)      translateX(0);     }
+    25%  { transform: scale(.9,1.1)   translateX(0);     }
+    40%  { transform: scale(1.1,.9)   translateX(-0.3vh);}
+    58%  { transform: scale(.95,1.05) translateX(0);     }
+    70%  { transform: scale(1,1)      translateX(-.1vh); }
+    84%  { transform: scale(1,1)      translateX(0);     }
+    100% { transform: scale(1,1)      translateX(0);     }
 }
 
 /* Solar System */
 
-#view {
-    display: flex;
-    flex-flow: nowrap;
-    position: relative;
-    box-sizing: border-box;
+.planet {
     width: 100%;
-    height: 92%;
+    height: 100%;
 }
 
-#adam {
-    position: absolute;
-    display: flex;
-    flex-flow: column nowrap;
-}
-
-#adam>object {
-    fill: black;
-    height: 100px;
-    width: 400px;
-}
-
-#canvas {
-    position: relative;
-    width: 100%;
-    transition: width 2s;
-}
-
-#orbits {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.orbit {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
+/* Settings */
 
 #credit {
     position: absolute;
@@ -457,148 +390,4 @@ header>h1 {
     justify-content: space-between;
     width: 20%;
     height: 2rem;
-}
-
-#solarsystem {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-#solarsystem canvas {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px;
-    height: 600px;
-}
-
-#sol {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 2rem;
-    width: 2rem;
-    background-color: rgb(252, 227, 0);
-    border-radius: 50%;
-}
-
-#sol-img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 3.6rem;
-    height: auto;
-}
-
-#solarsystem>.planet img {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 2.4rem;
-    height: auto;
-}
-
-#solarsystem>.planet p {
-    padding-bottom: 2.2rem;
-    padding-left: 2.2rem;
-    font-size: 1.5rem;
-}
-
-#solarsystem #moon>p {
-    position: absolute;
-    left: 1rem;
-    top: 0.7rem;
-    font-size: 1rem;
-}
-
-.planet {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 2rem;
-    width: 2rem;
-    border-radius: 50%;
-    display: inline-block;
-    text-align: center;
-    color: black;
-}
-
-.planet#sun {
-    background-color: #268bd2;
-}
-
-.planet#moon {
-    background-color: #93a1a1;
-    visibility: visible;
-}
-
-.planet#mercury {
-    background-color: #cb4b16;
-}
-
-.planet#venus {
-    background-color: #d33682;
-}
-
-.planet#mars {
-    background-color: #dc322f;
-}
-
-.planet#jupiter {
-    background-color: #b58900;
-}
-
-.planet#saturn {
-    background-color: #859900;
-}
-
-.planet#uranus {
-    background-color: #2aa198;
-}
-
-.planet#neptune {
-    background-color: #6c71c4;
-}
-
-#mercury-setting th, #mercury-setting a {
-    color: #cb4b16;
-}
-
-#venus-setting th, #venus-setting a {
-    color: #d33682;
-}
-
-#sun-setting th, #sun-setting a {
-    color: #268bd2;
-}
-
-#moon-setting th, #moon-setting a {
-    color: #93a1a1;
-}
-
-#mars-setting th, #mars-setting a {
-    color: #dc322f;
-}
-
-#jupiter-setting th, #jupiter-setting a {
-    color: #b58900;
-}
-
-#saturn-setting th, #saturn-setting a {
-    color: #859900;
-}
-
-#uranus-setting th, #uranus-setting a {
-    color: #2aa198;
-}
-
-#neptune-setting th, #neptune-setting a {
-    color: #6c71c4;
 }

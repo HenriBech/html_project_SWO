@@ -2,15 +2,18 @@ import * as calc from "http://127.0.0.1:5500/scripts/modules/calc.js";
 
 class astroElement {
     constructor(N, i, w, a, e, M, D, update) {
-        this._N0 = calc.modulateCircle(calc.getRadians(N));                     // longitude of the ascending node
+        this._N0 = calc.modulateCircle(calc.getRadians(N));                    // longitude of the ascending node
         this._i0 = calc.modulateCircle(calc.getRadians(i));                    // inclination to the ecliptic (plane of the Earth's orbit)
         this._w0 = calc.modulateCircle(calc.getRadians(w));                    // argument of perihelion
         this._a0 = a;                                // semi-major axis, or mean distance from Sun (set in AU, ideally)
         this._e0 = e;                                // eccentricity (0=circle, 0-1=ellipse, 1=parabola)
         this._M0 = calc.modulateCircle(calc.getRadians(M));                    // mean anomaly (0 at perihelion; increases uniformly with time)
-        this._D = D;
-        this._update = update;
-        this.elementAt(0);
+        this._D = D;                                                           // diameter
+        this._update = update;                                                 // object with update-information
+        this._orbitals = {};                                                   // named list (object) of orbitals
+        this.hasOrbitals = false;                                              // indicator for orbitals
+        this._f = {x: 0, y: 0};                                                // elliptical focus of orbit
+        this.elementAt(0);                                                     // initialize object
     }
     elementAt(d) {
         // update orbital elements
@@ -28,7 +31,51 @@ class astroElement {
         this._P = Math.pow(this._a, 1.5);     // orbital period (years if a is in AU, astronomical units)
         this._T = d-this._M/(Math.PI*2)*calc.Y*this._P;                                                    // time of perihelion
         this._E = calc.modulateCircle(this._M + this._e*Math.sin(this._M) * (1 + this._e*Math.cos(this._M)));  // eccentric anomaly
+        if (this.hasOrbitals) {
+            this.orbitalsFocus();
+            this.orbitalsAt(d);
+        };
     }
+
+    orbitalsAt(d) { // recursively update lower orbitals
+        Object.values(this._orbitals).forEach(orbital => {
+            orbital.elementAt(d);
+        });
+    }
+
+    orbitalsFocus() {
+        Object.keys(this._orbitals).forEach(orbital => {
+            this._orbitals[orbital]._f = this.pos;
+        });
+    }
+
+    addOrbital(orbitals) { // accepts object with variable amount of orbitals
+        Object.assign(this._orbitals, orbitals);
+        this.orbitalsFocus();
+        this.orbitalsAt(0)
+        this.hasOrbitals = true;
+    }
+
+    orbital(name) {
+        if (name in this._orbitals) {return this._orbitals[name];}
+        else {console.log(name+" not among orbitals of "+this)}
+    }
+
+    getSuborbitals(n=Infinity, re={}) { // recursively finds all sub-orbit selectors of the current element up to n layers deep
+        if (!this.hasOrbitals || n==0) {return re}
+        else {
+            for (const [name, el] of Object.entries(this._orbitals)) {
+                re[name] = el;
+                el.getSuborbitals(--n, re);
+            }
+            return re;
+        }
+    }
+
+    get pos() {
+        return {x: this._x+this._f.x, y: this._y+this._f.y};
+    }
+
     get epoch() {
         return Math.round(this._T);
     }
@@ -54,9 +101,6 @@ class earthElement extends astroElement {
         this._RA = calc.modulateCircle(Math.atan2(this._ye, this._xe));  // Right Ascension
         this._Dec = calc.modulateCircle(Math.atan2(this._ze, Math.sqrt(this._xe*this._xe+this._ye*this._ye))); // Declination
         this._Ls = calc.modulateCircle(this._M + this._w)                // Mean longitude
-    }
-    get pos() {
-        return {x: this._x, y: this._y};
     }
 }
 
@@ -88,12 +132,27 @@ class planetElement extends astroElement {
         } while (calc.getDegree(Math.abs(delta)) > 0.001);   // calculate to accuracy of 0.001 degrees
         this._E = calc.modulateCircle(E1);                   // if orbit is too parabolical (e≈1), this will not converge!
     }
-    get pos() {
-        return {x: this._x, y: this._y};
-    }
 }
 
 /* Objects to store update parameters */
+
+const system_init = {
+    N: 0,
+    i: 0,
+    w: 0,
+    a: 0,
+    e: 0,
+    M: 0,
+    D: 0,
+    update: {
+        N: 0,
+        i: 0,
+        w: 0,
+        a: 0,
+        e: 0,
+        M: 0
+    }
+}
 
 const mercury_init = {
     N: 48.3313,
@@ -258,6 +317,7 @@ const neptune_init = {
 }
 
 const solarSystem = {
+    sun: system_init,
     mercury: mercury_init, 
     venus: venus_init, 
     earth: earth_init, 
@@ -269,4 +329,4 @@ const solarSystem = {
     neptune: neptune_init
 }
 
-export {earthElement, planetElement, solarSystem}
+export {astroElement, earthElement, planetElement, solarSystem}
