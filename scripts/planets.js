@@ -1,26 +1,27 @@
-import * as calc from "http://127.0.0.1:5500/scripts/modules/calc.js";
-import * as astro from "http://127.0.0.1:5500/scripts/modules/astroCalc.js";
+import calc from "http://127.0.0.1:5500/scripts/modules/calc.js";
+import astro from "http://127.0.0.1:5500/scripts/modules/astroCalc.js";
+import { solarSystem as systemData } from "http://127.0.0.1:5500/scripts/modules/astroCalc.js";
 import * as d3 from "https://cdn.skypack.dev/d3@7";
 
 ////////////////////////// SETUP //////////////////////////////////////////////////
 // Add planets to solar system
 const planets = {
-    "mercury": new astro.planetElement(...Object.values(astro.solarSystem.mercury)),
-    "venus": new astro.planetElement(...Object.values(astro.solarSystem.venus)),
-    "earth": new astro.earthElement(...Object.values(astro.solarSystem.earth)),
-    "mars": new astro.planetElement(...Object.values(astro.solarSystem.mars)),
-    "jupiter": new astro.planetElement(...Object.values(astro.solarSystem.jupiter)),
-    "saturn": new astro.planetElement(...Object.values(astro.solarSystem.saturn)),
-    "uranus": new astro.planetElement(...Object.values(astro.solarSystem.uranus)),
-    "neptune": new astro.planetElement(...Object.values(astro.solarSystem.neptune))
+    "mercury": new astro.planetElement(...Object.values(systemData.mercury)),
+    "venus": new astro.planetElement(...Object.values(systemData.venus)),
+    "earth": new astro.earthElement(...Object.values(systemData.earth)),
+    "mars": new astro.planetElement(...Object.values(systemData.mars)),
+    "jupiter": new astro.planetElement(...Object.values(systemData.jupiter)),
+    "saturn": new astro.planetElement(...Object.values(systemData.saturn)),
+    "uranus": new astro.planetElement(...Object.values(systemData.uranus)),
+    "neptune": new astro.planetElement(...Object.values(systemData.neptune))
 }
 
-const sun = new astro.astroElement(...Object.values(astro.solarSystem.sun));
+const sun = new astro.astroElement(...Object.values(systemData.sun));
 sun._x = 0; sun._y = 0; // center solar-system
 sun.addOrbital(planets);
 
 // Add moon to earth
-var moon = {"moon": new astro.planetElement(...Object.values(astro.solarSystem.moon))};
+var moon = {"moon": new astro.planetElement(...Object.values(systemData.moon))};
 sun.orbital("earth").addOrbital(moon);
 
 // Add colors
@@ -51,6 +52,7 @@ class SIM {
         this._scale = scale;
         this._step = step;
         this._scalor = 1; // scaling factor for planet sizes
+        this._sizing = "relative"
     }
     // parameter getters and setters
     get data() {return this._data;}
@@ -61,6 +63,11 @@ class SIM {
     set scale(scale) {this._scale = scale;}
     set step(step) {this._step = step;}
     set scaling(scalor) {this._scalor = scalor;}
+    set scaleAdd(x) {this.scale += x}
+    set scaleRed(x) {this.scale -= x}
+    set stepAdd(x) {this.step += x}
+    set stepRed(x) {this.step += x}
+    set sizingMode(mode) {this._sizing = mode}
 
     // Create empty svg for each element in data
     setCanvas(target) {
@@ -92,12 +99,12 @@ class SIM {
                 .attr('r', datum.element._D*this._scalor)
                 .attr('stroke', 'black')
                 .attr('fill', datum.element.color);
-            d3.xml("http://127.0.0.1:5500/resources/images/planets/"+datum.name+".svg")     // svg graphics
-                .then(function(d) {
-                    d3.select("#"+datum.name)
-                        .node()
-                      .append(d.documentElement)
-                });
+            // d3.xml("http://127.0.0.1:5500/resources/images/planets/"+datum.name+".svg")     // svg graphics
+            //     .then(function(d) {
+            //         d3.select("#"+datum.name)
+            //             .node()
+            //           .append(d.documentElement)
+            //     });
         })
     }
 
@@ -257,13 +264,16 @@ solarSystem.addPlanets();
 //     if (!focus.focused) {
 //         focus.focused = true;
 //         focus.focus = element;
+//         document.title = element;
 //     } else {
 //         if (focus.focus == element) {
 //             focus.focused = false;
 //             focus.focus = false;
+//             document.title = "Planets"
 //         } else {
 //             document.getElementById('focus-'+focus.focus).classList.toggle('fa-dot-circle');
 //             focus.focus = element;
+//             document.title = element;
 //         }
 //     }
 // }

@@ -1,4 +1,4 @@
-import * as calc from "http://127.0.0.1:5500/scripts/modules/calc.js";
+import calc from "http://127.0.0.1:5500/scripts/modules/calc.js";
 
 class astroElement {
     constructor(N, i, w, a, e, M, D, update) {
@@ -329,4 +329,5 @@ const solarSystem = {
     neptune: neptune_init
 }
 
-export {astroElement, earthElement, planetElement, solarSystem}
+export default {astroElement, earthElement, planetElement}
+export {solarSystem};

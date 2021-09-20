@@ -46,4 +46,4 @@ function ecl(d) {
     return getRadians(23.4393 - 3.563E-7 * d);
 }
 
-export {Y, div, modulateCircle, getEpoch, getDate, getAU, getRadians, getDegree, ecl};
+export default {Y, div, modulateCircle, getEpoch, getDate, getAU, getRadians, getDegree, ecl};
