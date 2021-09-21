@@ -63,11 +63,9 @@ class SIM {
     set scale(scale) {this._scale = scale;}
     set step(step) {this._step = step;}
     set scaling(scalor) {this._scalor = scalor;}
-    set scaleAdd(x) {this.scale += x}
-    set scaleRed(x) {this.scale -= x}
-    set stepAdd(x) {this.step += x}
-    set stepRed(x) {this.step += x}
     set sizingMode(mode) {this._sizing = mode}
+    scaleAdd(x) {this.scale += x}
+    stepAdd(x) {this.step += x}
 
     // Create empty svg for each element in data
     setCanvas(target) {
@@ -138,13 +136,53 @@ class SIM {
     }
 }
 
+class EVENTS {
+    constructor (SIM) {
+        this.SIM = SIM;
+    }
+    interval (t) { // set interval t (in ms) for update of system
+        setInterval(() => {this.SIM.frame()}, t); 
+    }
+    setEventHandler(dom, type, func) {
+        dom.addEventListener(type, func);
+    }
+}
+
 const solarSystem = new SIM(sun, 20, 5);
-setInterval(function(){solarSystem.frame()}, 10); // update frame every 10ms
+const events = new EVENTS(solarSystem);
 
 solarSystem.setCanvas("#canvas");
 solarSystem.scaling = 40000;
 solarSystem.addPlanets();
+events.interval(10);
 
+/* Event Handling */
+
+events.setEventHandler(document.getElementById("scale-minus"), "click", () => {
+    solarSystem.scaleAdd(-10)   // reduce scale button
+});
+events.setEventHandler(document.getElementById("scale-plus"), "click", () => {
+    solarSystem.scaleAdd(10)    // increase scale button
+});
+events.setEventHandler(document.getElementById("scale-form"), "keyup", (event) => {
+    if(event.key == "Enter") {// Check for Enter-key
+        solarSystem.scale = Number(document.getElementById("scale-form").value);     // set scale form
+        } else {return;}
+        event.preventDefault();
+});  
+    
+document.getElementById("step-minus").addEventListener("click", solarSystem.stepAdd(-1));     // reduce step button
+document.getElementById("step-plus").addEventListener("click", solarSystem.stepAdd(1));       // increase step button
+document.getElementById("step-form").addEventListener("keyup", event => {       // set step form
+    if(event.key == "Enter") {// Check for Enter-key
+    solarsystem.step = Number(document.getElementById("step-form").value);
+    // savedStep = false;
+    } else {return;}
+    event.preventDefault();
+});
+
+window.SIM = SIM;
+window.EVENTS = EVENTS;
 // /* functions for html-interaction */
 
 // // variables to store runtime-info
@@ -420,41 +458,20 @@ solarSystem.addPlanets();
 // window.showImpressum = showImpressum;
 // window.drawOrbit = drawOrbit;
 
-// /* event handling */ 
+/* event handling */ 
 
-// document.getElementById("scale-minus").addEventListener("click", minusScale);   // reduce scale button
-// document.getElementById("scale-plus").addEventListener("click", plusScale);     // increase scale button
-// document.getElementById("scale-form").addEventListener("keyup", event => {      // set scale form
-//     if(event.key == "Enter") {// Check for Enter-key
-//     scale = Number(document.getElementById("scale-form").value);
-//     updateScale();
-//     } else {return;}
-//     event.preventDefault();
-// });
-// document.getElementById("step-minus").addEventListener("click", minusStep);     // reduce step button
-// document.getElementById("step-plus").addEventListener("click", plusStep);       // increase step button
-// document.getElementById("step-form").addEventListener("keyup", event => {       // set step form
-//     if(event.key == "Enter") {// Check for Enter-key
-//     step = Number(document.getElementById("step-form").value);
-//     savedStep = false;
-//     updateStep();
-//     } else {return;}
-//     event.preventDefault();
-// });
-// document.getElementById("date-range").addEventListener("input", event => {      // timeline range
-//     d = Number(document.getElementById("date-range").value);
-// });
-// document.getElementById("date-input").addEventListener("input", event => {      // date selector
-//     let input = document.getElementById("date-input").value;
-//     d = calc.getEpoch(...input.split('-'));
-//     // if(event.key == "Enter") {
-//     //     console.log(document.getElementById("date-input").value)}
-//     //d = Number(document.getElementById("date-input").value);
-// });
-// document.getElementById("canvas").addEventListener('keydown', event =>{         // press space to pause
-//     console.log(event.code)                                                     // doesn't work
-//     if(event.code == "Space") {
-//         togglePlay();
-//         console.log(event.code)
-//     }
-// });
+
+document.getElementById("date-range").addEventListener("input", event => {      // timeline range
+    solarSystem.d = Number(document.getElementById("date-range").value);
+});
+document.getElementById("date-input").addEventListener("input", event => {      // date selector
+    let input = document.getElementById("date-input").value;
+    solarSystem.d = calc.getEpoch(...input.split('-'));
+});
+document.getElementById("canvas").addEventListener('keydown', event =>{         // press space to pause
+    console.log(event.code)                                                     // doesn't work
+    if(event.code == "Space") {
+        togglePlay();
+        console.log(event.code)
+    }
+});
