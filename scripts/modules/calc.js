@@ -26,6 +26,13 @@ function getDate(d) {
     return [('0' + date.getDate()).slice(-2), ('0' + (date.getMonth()+1)).slice(-2), date.getFullYear()].join('.');
 }
 
+function YMD(d) {
+    let date = new Date('2000-01-01');
+    date.setDate(date.getDate() + d);
+    return [date.getFullYear(), ('0' + (date.getMonth()+1)).slice(-2), ('0' + date.getDate()).slice(-2)].join('-');
+}
+
+
 function getAU(D) {
     // returns the distance D (km) in AU
     return D/1.495978707e+8;
@@ -46,4 +53,4 @@ function ecl(d) {
     return getRadians(23.4393 - 3.563E-7 * d);
 }
 
-export default {Y, div, modulateCircle, getEpoch, getDate, getAU, getRadians, getDegree, ecl};
+export default {Y, div, modulateCircle, getEpoch, getDate, YMD, getAU, getRadians, getDegree, ecl};

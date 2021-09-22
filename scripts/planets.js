@@ -1,39 +1,7 @@
 import calc from "http://127.0.0.1:5500/scripts/modules/calc.js";
 import astro from "http://127.0.0.1:5500/scripts/modules/astroCalc.js";
-import { solarSystem as systemData } from "http://127.0.0.1:5500/scripts/modules/astroCalc.js";
+import { solarSystem } from "http://127.0.0.1:5500/scripts/modules/astroCalc.js";
 import * as d3 from "https://cdn.skypack.dev/d3@7";
-
-////////////////////////// SETUP //////////////////////////////////////////////////
-// Add planets to solar system
-const planets = {
-    "mercury": new astro.planetElement(...Object.values(systemData.mercury)),
-    "venus": new astro.planetElement(...Object.values(systemData.venus)),
-    "earth": new astro.earthElement(...Object.values(systemData.earth)),
-    "mars": new astro.planetElement(...Object.values(systemData.mars)),
-    "jupiter": new astro.planetElement(...Object.values(systemData.jupiter)),
-    "saturn": new astro.planetElement(...Object.values(systemData.saturn)),
-    "uranus": new astro.planetElement(...Object.values(systemData.uranus)),
-    "neptune": new astro.planetElement(...Object.values(systemData.neptune))
-}
-
-const sun = new astro.astroElement(...Object.values(systemData.sun));
-sun._x = 0; sun._y = 0; // center solar-system
-sun.addOrbital(planets);
-
-// Add moon to earth
-var moon = {"moon": new astro.planetElement(...Object.values(systemData.moon))};
-sun.orbital("earth").addOrbital(moon);
-
-// Add colors
-sun.orbital("mercury").color = '#cb4b16';  // Orange
-sun.orbital("venus").color = '#d33682';  // Pink
-sun.orbital("earth").color = '#268bd2';  // Blue
-sun.orbital("earth").orbital("moon").color = '#93a1a1'; // Grey
-sun.orbital("mars").color = '#dc322f';  // Red
-sun.orbital("jupiter").color = '#b58900';  // Green
-sun.orbital("saturn").color = '#859900';  // Yellow
-sun.orbital("uranus").color = '#2aa198';  // Cyan
-sun.orbital("neptune").color = '#6c71c4';  // Violet
 
 ////////////////////////////// SIMULATION /////////////////////////////////
 
@@ -53,6 +21,7 @@ class SIM {
         this._step = step;
         this._scalor = 1; // scaling factor for planet sizes
         this._sizing = "relative"
+        this._focus = {focused: false, focus: false};
     }
     // parameter getters and setters
     get data() {return this._data;}
@@ -94,7 +63,7 @@ class SIM {
         this.data.forEach(datum => {
             d3.select("#"+datum.name)
               .append('circle')             // draw underlying circle
-                .attr('r', datum.element._D*this._scalor)
+                .attr('r', datum.element._D*this._scalor*this.scale)
                 .attr('stroke', 'black')
                 .attr('fill', datum.element.color);
             // d3.xml("http://127.0.0.1:5500/resources/images/planets/"+datum.name+".svg")     // svg graphics
@@ -106,15 +75,24 @@ class SIM {
         })
     }
 
+    setPlanetSize() {
+        this.data.forEach(datum => {
+            d3.select("#"+datum.name)
+              .select('circle')
+                .attr('r', datum.element._D*this._scalor*this.scale)
+        });
+    }
+
     planet(name) {return this._system.getSuborbitals()[name];}
 
     position(d) {
         this.d = d;
         let offset = {x: 0, y: 0};
-        // if (focus.focus) {
-        //     offset.x = -solarSystem[focus.focus].pos.x;
-        //     offset.y = -solarSystem[focus.focus].pos.y;
-        // }
+        if (this._focus.focus) {
+            let focus = this.data.find(el => el.name === this._focus.focus).element
+            offset.x = -focus.pos.x;
+            offset.y = -focus.pos.y;
+        }
         this._system.elementAt(this.d); // update all elements
         d3.selectAll("svg")
           .select("circle")
@@ -129,9 +107,10 @@ class SIM {
             this.d = -35000;
         } else {
         this.d+=this.step;
-        // document.getElementById("date-range").value = d;
+        $("#date-range").val(this.d)
+        $("#date-input").val(calc.YMD(this.d))
+        this.setPlanetSize()
         this.position(this.d)
-        // document.getElementById("d").innerHTML = (calc.getDate(d));
         }
     }
 }
@@ -144,45 +123,12 @@ class EVENTS {
         setInterval(() => {this.SIM.frame()}, t); 
     }
     setEventHandler(dom, type, func) {
-        dom.addEventListener(type, func);
+        dom.on(type, func);
     }
 }
 
-const solarSystem = new SIM(sun, 20, 5);
-const events = new EVENTS(solarSystem);
+export default {SIM, EVENTS, solarSystem}
 
-solarSystem.setCanvas("#canvas");
-solarSystem.scaling = 40000;
-solarSystem.addPlanets();
-events.interval(10);
-
-/* Event Handling */
-
-events.setEventHandler(document.getElementById("scale-minus"), "click", () => {
-    solarSystem.scaleAdd(-10)   // reduce scale button
-});
-events.setEventHandler(document.getElementById("scale-plus"), "click", () => {
-    solarSystem.scaleAdd(10)    // increase scale button
-});
-events.setEventHandler(document.getElementById("scale-form"), "keyup", (event) => {
-    if(event.key == "Enter") {// Check for Enter-key
-        solarSystem.scale = Number(document.getElementById("scale-form").value);     // set scale form
-        } else {return;}
-        event.preventDefault();
-});  
-    
-document.getElementById("step-minus").addEventListener("click", solarSystem.stepAdd(-1));     // reduce step button
-document.getElementById("step-plus").addEventListener("click", solarSystem.stepAdd(1));       // increase step button
-document.getElementById("step-form").addEventListener("keyup", event => {       // set step form
-    if(event.key == "Enter") {// Check for Enter-key
-    solarsystem.step = Number(document.getElementById("step-form").value);
-    // savedStep = false;
-    } else {return;}
-    event.preventDefault();
-});
-
-window.SIM = SIM;
-window.EVENTS = EVENTS;
 // /* functions for html-interaction */
 
 // // variables to store runtime-info
@@ -298,22 +244,22 @@ window.EVENTS = EVENTS;
 // }
 
 // function toggleFocusIcon(name, element) {
-//     name.classList.toggle('fa-dot-circle');
-//     if (!focus.focused) {
-//         focus.focused = true;
-//         focus.focus = element;
-//         document.title = element;
-//     } else {
-//         if (focus.focus == element) {
-//             focus.focused = false;
-//             focus.focus = false;
-//             document.title = "Planets"
-//         } else {
-//             document.getElementById('focus-'+focus.focus).classList.toggle('fa-dot-circle');
-//             focus.focus = element;
-//             document.title = element;
-//         }
-//     }
+    // name.classList.toggle('fa-dot-circle');
+    // if (!focus.focused) {
+    //     focus.focused = true;
+    //     focus.focus = element;
+    //     document.title = element;
+    // } else {
+    //     if (focus.focus == element) {
+    //         focus.focused = false;
+    //         focus.focus = false;
+    //         document.title = "Planets"
+    //     } else {
+    //         document.getElementById('focus-'+focus.focus).classList.toggle('fa-dot-circle');
+    //         focus.focus = element;
+    //         document.title = element;
+    //     }
+    // }
 // }
 
 // function showImpressum() {
@@ -457,21 +403,3 @@ window.EVENTS = EVENTS;
 // window.setPlanetSize = setPlanetSize;
 // window.showImpressum = showImpressum;
 // window.drawOrbit = drawOrbit;
-
-/* event handling */ 
-
-
-document.getElementById("date-range").addEventListener("input", event => {      // timeline range
-    solarSystem.d = Number(document.getElementById("date-range").value);
-});
-document.getElementById("date-input").addEventListener("input", event => {      // date selector
-    let input = document.getElementById("date-input").value;
-    solarSystem.d = calc.getEpoch(...input.split('-'));
-});
-document.getElementById("canvas").addEventListener('keydown', event =>{         // press space to pause
-    console.log(event.code)                                                     // doesn't work
-    if(event.code == "Space") {
-        togglePlay();
-        console.log(event.code)
-    }
-});

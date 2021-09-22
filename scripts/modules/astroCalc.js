@@ -316,18 +316,36 @@ const neptune_init = {
     }
 }
 
-const solarSystem = {
-    sun: system_init,
-    mercury: mercury_init, 
-    venus: venus_init, 
-    earth: earth_init, 
-    moon: moon_init, 
-    mars: mars_init,
-    jupiter: jupiter_init,
-    saturn: saturn_init,
-    uranus: uranus_init,
-    neptune: neptune_init
+// Add planets to solar system
+const planets = {
+    "mercury": new planetElement(...Object.values(mercury_init)),
+    "venus": new planetElement(...Object.values(venus_init)),
+    "earth": new earthElement(...Object.values(earth_init)),
+    "mars": new planetElement(...Object.values(mars_init)),
+    "jupiter": new planetElement(...Object.values(jupiter_init)),
+    "saturn": new planetElement(...Object.values(saturn_init)),
+    "uranus": new planetElement(...Object.values(uranus_init)),
+    "neptune": new planetElement(...Object.values(neptune_init))
 }
+
+const solarSystem = new astroElement(...Object.values(system_init));
+solarSystem._x = 0; solarSystem._y = 0; // center solar-system
+solarSystem.addOrbital(planets);
+
+// Add moon to earth
+var moon = {"moon": new planetElement(...Object.values(moon_init))};
+solarSystem.orbital("earth").addOrbital(moon);
+
+// Add colors
+solarSystem.orbital("mercury").color = '#cb4b16';  // Orange
+solarSystem.orbital("venus").color = '#d33682';  // Pink
+solarSystem.orbital("earth").color = '#268bd2';  // Blue
+solarSystem.orbital("earth").orbital("moon").color = '#93a1a1'; // Grey
+solarSystem.orbital("mars").color = '#dc322f';  // Red
+solarSystem.orbital("jupiter").color = '#b58900';  // Green
+solarSystem.orbital("saturn").color = '#859900';  // Yellow
+solarSystem.orbital("uranus").color = '#2aa198';  // Cyan
+solarSystem.orbital("neptune").color = '#6c71c4';  // Violet
 
 export default {astroElement, earthElement, planetElement}
 export {solarSystem};

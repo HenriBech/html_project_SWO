@@ -9,42 +9,40 @@
     <link rel="stylesheet" href="resources/css/reset.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
     <link rel="stylesheet" href="resources/css/style.css">
-    <script type="module" src="http://127.0.0.1:5500/scripts/planets.js" async></script>
+    <script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous">
+    </script>
+    <script type="module" src="http://127.0.0.1:5500/scripts/planets.js"></script>
+    <script type="module" src="http://127.0.0.1:5500/scripts/index.js" async></script>
 </head>
 <body>
     <nav class="navbar">
         <img class="logo" src="./resources/images/planets/saturn.svg" alt="Saturn by Kevin White from the Noun Project">
         <ul>
-            <li><a href="./content.html">Home</a></li>
-            <li id="impressum-link" onclick="HTML.goto('impressum')"><p>Legal Notice</p></li>
-            <li><p onclick="HTML.hideElement('contacts')">Contact</p><div id="contacts" style="display: none;">
-                <a href="https://www.instagram.com/h.enri.b" target="_blank"><i class="fab fa-instagram"></i></a>
-                <a href="https://github.com/HenriBech" target="_blank"><i class="fab fa-github"></i></a>
-                <a href="https://open.spotify.com/user/henrislistening" target="_blank"><i class="fab fa-spotify"></i></a>
-            </div></li>
+            <li><p id="solar-btn">Solar System</p></li>
+            <li><p id="random-btn">Random System</p></li>
+            <li><p id="socials-btn">Socials</p>
+                <div id="socials" style="display: none;">
+                    <a href="https://www.instagram.com/h.enri.b" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://github.com/HenriBech" target="_blank"><i class="fab fa-github"></i></a>
+                    <a href="https://open.spotify.com/playlist/0gmEHDFpATI4A1LRZ56HyC?si=1c75ad9f90104746" target="_blank"><i class="fab fa-spotify"></i></a>
+                </div>
+            </li>
         </ul>
     </nav>
     <div id="offset"></div>
     <section class="full first-post" id="impressum" style="display: none;">
-        <div style="width: 50%; min-width: 300px; padding: 3rem; overflow-y: scroll;"><h1>Impressum</h1><p>Angaben gemäß § 5 TMG</p><p>Henri Bechert <br> 
-            Kreuzstraße 8<br> 
-            04103 Leipzig <br> 
-            </p><p> <strong>Vertreten durch: </strong><br>
-            Henri Bechert<br>
-            </p><p><strong>Kontakt:</strong> <br>
-            Telefon: 0176-61447230<br>
-            E-Mail: <a href='mailto:henri.bechert@softwareone.com' target="_blank">henri.bechert@softwareone.com</a></br></p><p><strong>Haftungsausschluss: </strong><br><br><strong>Haftung für Links</strong><br><br>
-            Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.<br><br><strong>Urheberrecht</strong><br><br>
-            Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet. Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.</p><br>
-        </div>     
+        <!-- TODO -->
     </section>
     <section class="full first-post" id="planets">
         <div id="view">
             <div class="center" id="canvas">
-
+                <!-- populated by D3 @ planets.js  -->
             </div>
             <div id="credit" style="display: none;"><p>calculations based on work by</p><a href="https://stjarnhimlen.se/comp/ppcomp.html" target="_blank">Paul Schlyter</a></div>
-            <div><a href="#" onclick="hideElement('settings'); hideElement('credit')" id="setting-link"><i class="fas fa-cog" id="setting-icon"></i></a></div>
+            <div><a href="#" id="settings-btn"><i class="fas fa-cog"></i></a></div>
             <div id="settings" style="display: inline-flex;">
                 <div id="planet-settings">
                     <h3>Planet Settings</h3>
@@ -57,61 +55,8 @@
                                 <th>Focus</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            <tr id="mercury-setting">
-                                <th><img src="./resources/images/planets/mercury.svg"> Mercury</th>
-                                <td><a href="#" onclick="hideElement('mercury')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="drawOrbit('mercury')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
-                                <td><a href="#"><i id="focus-mercury" onclick="toggleFocusIcon(this, 'mercury')" class="far fa-circle"></i></a></td>
-                            </tr>
-                            <tr id="venus-setting">
-                                <th><img src="./resources/images/planets/venus.svg"> Venus</th>
-                                <td><a href="#" onclick="hideElement('venus')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="drawOrbit('venus')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
-                                <td><a href="#"><i id="focus-venus" onclick="toggleFocusIcon(this, 'venus')" class="far fa-circle"></i></a></td>
-                            </tr>
-                            <tr id="sun-setting">
-                                <th><img src="./resources/images/planets/earth.svg"> Earth</th>
-                                <td><a href="#" onclick="hideElement_vis('sun')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="drawOrbit('sun')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
-                                <td><a href="#"><i id="focus-sun" onclick="toggleFocusIcon(this, 'sun')" class="far fa-circle"></i></a></td>
-                            </tr>
-                            <tr id="moon-setting">
-                                <th><img src="./resources/images/planets/moon.svg"> Moon</th>
-                                <td><a href="#" onclick="hideElement_vis('moon')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="drawOrbit('moon')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
-                                <td><a href="#"><i id="focus-moon" onclick="toggleFocusIcon(this, 'moon')" class="far fa-circle"></i></a></td>
-                            </tr>
-                            <tr id="mars-setting">
-                                <th><img src="./resources/images/planets/mars.svg"> Mars</th>
-                                <td><a href="#" onclick="hideElement('mars')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="drawOrbit('mars')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
-                                <td><a href="#"><i id="focus-mars" onclick="toggleFocusIcon(this, 'mars')" class="far fa-circle"></i></a></td>
-                            </tr>
-                            <tr id="jupiter-setting">
-                                <th><img src="./resources/images/planets/jupiter.svg"> Jupiter</th>
-                                <td><a href="#" onclick="hideElement('jupiter')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="drawOrbit('jupiter')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
-                                <td><a href="#"><i id="focus-jupiter" onclick="toggleFocusIcon(this, 'jupiter')" class="far fa-circle"></i></a></td>
-                            </tr>
-                            <tr id="saturn-setting">
-                                <th><img src="./resources/images/planets/saturn.svg"> Saturn</th>
-                                <td><a href="#" onclick="hideElement('saturn')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="drawOrbit('saturn')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
-                                <td><a href="#"><i id="focus-saturn" onclick="toggleFocusIcon(this, 'saturn')" class="far fa-circle"></i></a></td>
-                            </tr>
-                            <tr id="uranus-setting">
-                                <th><img src="./resources/images/planets/uranus.svg"> Uranus</th>
-                                <td><a href="#" onclick="hideElement('uranus')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="drawOrbit('uranus')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
-                                <td><a href="#"><i id="focus-uranus" onclick="toggleFocusIcon(this, 'uranus')" class="far fa-circle"></i></a></td>
-                            </tr>
-                            <tr id="neptune-setting">
-                                <th><img src="./resources/images/planets/neptune.svg"> Neptune</th>
-                                <td><a href="#" onclick="hideElement('neptune')"><i onclick="toggleVisIcon(this)" class="far fa-eye"></i></a></td>
-                                <td><a href="#" onclick="drawOrbit('neptune')"><i onclick="toggleHidIcon(this)" class="far fa-eye-slash"></i></a></td>
-                                <td><a href="#"><i id="focus-neptune" onclick="toggleFocusIcon(this, 'neptune')" class="far fa-circle"></i></a></td>
-                            </tr>
+                        <tbody id="table-body">
+                            <!-- populated by jQuery @ index.js -->
                         </tbody>
                     </table>
                 </div>
@@ -121,7 +66,7 @@
                         <p>Scale: </p>
                         <form action="javascript:void(0);">
                             <a href="#" id="scale-minus"><i class="fas fa-search-minus"></i></a>
-                            <input type="text" name="" id="scale-form" autocomplete="off">
+                            <input type="range" min="1" max="1000" class="slider" id="scale-range">
                             <a href="#" id="scale-plus"><i class="fas fa-search-plus"></i></a>
                         </form>
                     </div>
@@ -143,7 +88,7 @@
                         <p>Speed: </p>
                         <form action="javascript:void(0);">
                             <a href="#" id="step-minus"><i class="fas fa-minus-circle"></i></a>
-                            <input type="text" name="" id="step-form" autocomplete="off">
+                            <input type="range" min="0.0" max="20.0" step="0.1" class="slider" id="step-range">
                             <a href="#" id="step-plus"><i class="fas fa-plus-circle"></i></a>
                         </form>
                     </div>
@@ -156,15 +101,12 @@
                 <input type="range" min="-35000" max="35000" value="0" class="slider" id="date-range">
             </div>
             <div id="datebox">
-                <p>Select Date:</p>
+                <p>Date:</p>
                 <form action="javascript:void(0);">
                     <input type="date" id="date-input"
                     value="2000-01-01"
                     min="1900-01-01" max="2100-12-31">
                 </form>
-            </div>
-            <div id="days">
-                <p>Date: <span id="d"></span></p>
             </div>
         </div>
     </section>

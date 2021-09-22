@@ -19,7 +19,7 @@ $green:     #859900
 @import url('https://fonts.googleapis.com/css2?family=Kaisei+HarunoUmi:wght@400;700&display=swap');
 
 html {
-    font-size: 12px;
+    font-size: 1.35vh;
     font-family: 'Kaisei HarunoUmi', serif;
 }
 
@@ -93,24 +93,28 @@ a:link, a:visited, a:hover, a:active {
     flex-flow: nowrap;
     padding: 1vh 2vw;
     border-radius: 1vh;
-    transition: background-color 200ms ease-in-out;
+    transition: background-color 400ms ease-in-out;
 }
 
-.navbar li:hover {
+.navbar-hover {
     background-color: #002b36;
     cursor: pointer;
 }
 
-.navbar li:hover p, .navbar li:hover a{
+.navbar-hover p, .navbar-hover i {
     color: #eee8d5;
 }
 
-#contacts {
+#socials {
     display: flex;
     flex-flow: nowrap;
     justify-content: space-evenly;
     width: 10rem;
     height: 1.2rem;
+}
+
+#socials>* {
+    display: none;
 }
 
 #offset {
@@ -122,7 +126,7 @@ a:link, a:visited, a:hover, a:active {
     font-size: 3rem;
     font-family: 'Times New Roman', Times, serif;
     padding: 0.5vh 2vw;
-    filter: invert(53%) sepia(22%) saturate(1305%) hue-rotate(199deg) brightness(82%) contrast(84%);
+    /* filter: invert(53%) sepia(22%) saturate(1305%) hue-rotate(199deg) brightness(82%) contrast(84%); */
 }
 
 .logo:hover {
@@ -163,7 +167,7 @@ a:link, a:visited, a:hover, a:active {
     padding: 0 0.2rem;
 }
 
-#setting-link {
+#settings-btn {
     position: absolute;
     right: 0.8rem;
     top: 0.8rem;
@@ -171,35 +175,31 @@ a:link, a:visited, a:hover, a:active {
     width: fit-content;
     z-index: 10;
     opacity: 0.5;
-    transition: 200ms ease-in-out;
-}
-
-#setting-link:hover {
-    opacity: 1;
 }
 
 #settings {
-    width: 30%;
+    width: fit-content;
+    min-width: 300px;
+    height: 100%;
     display: inline-flex;
+    float: right;
     flex-flow: column;
     padding: 2.5rem 1.5rem;
     padding-bottom: 0rem;
     transition: right 2000ms, ease-in;
-    font-size: 1.2vw;
+    font-size: 1.2em;
+    line-height: 1.2em;
 }
 
-@media screen and (max-width: 800px) {
-    #settings {
-        position: absolute;
-        height: 60%;
-        width: 90%;
-        font-size: 2.5vw;
-        flex-flow: column wrap;
-    }
-    #settings>* {
-        width: 45%;
-        height: auto;
-    }
+.btn {
+    cursor: pointer;
+    opacity: 0.7;
+    transition: all 200ms ease-in-out;
+}
+
+.btn-hover {
+    opacity: 1;
+    font-size: 1.2em;
 }
 
 #settings>* {
@@ -222,13 +222,8 @@ a:link, a:visited, a:hover, a:active {
     height: 70%;
 }
 
-#planet-settings table img {
-    width: 1.8em;
-    height: auto;
-    filter: invert(100%);
-}
-
 #planet-settings tr>* {
+    justify-content: space-between;
     align-items: center;
     text-align: center;
     vertical-align: middle;
@@ -305,6 +300,8 @@ a:link, a:visited, a:hover, a:active {
 }
 
 #timeline {
+    position: absolute;
+    bottom: 0;
     box-sizing: border-box;
     display: flex;
     flex-flow: nowrap;
@@ -341,7 +338,7 @@ a:link, a:visited, a:hover, a:active {
 }
 
 #timeline-slider {
-    width: 60%;
+    width: 80%;
     height: 2rem;
 }
 
@@ -377,12 +374,7 @@ a:link, a:visited, a:hover, a:active {
 }
 
 #datebox {
-    width: 20%;
-    height: 2rem;
-}
-
-#days {
-    justify-content: space-between;
+    justify-content: space-evenly;
     width: 20%;
     height: 2rem;
 }
