@@ -1,4 +1,5 @@
 import planets from "http://127.0.0.1:5500/scripts/planets.js";
+import calc from "http://127.0.0.1:5500/scripts/modules/calc.js";
 
 /* Functions */
 
@@ -9,21 +10,29 @@ const capitalize = function(string) {
 const populateSettings = function(system) {
     const table = $('#table-body');
     table.empty();
-    system.data.forEach(function(el){
-        table.append(`<tr id="${el.name}-settings">
-            <th>${capitalize(el.name)}</th>
-            <td><i id="${el.name}-hide" class="btn far fa-eye"></i></td>
-            <td><i id="${el.name}-orbit" class="btn far fa-eye-slash"></i></td>
-            <td><i id="${el.name}-focus" class="btn far fa-circle"></i></td>
-        </tr>`)
+    system.data.forEach(function(el, i){
+        if (i<1) {
+            table.append(`<tr id="${el.name}-settings">
+                <th>${capitalize(el.name)}</th>
+                <td><i id="${el.name}-hide" class="btn far fa-eye"></i></td>
+            </tr>`)
+        } else {
+            table.append(`<tr id="${el.name}-settings">
+                <th>${capitalize(el.name)}</th>
+                <td><i id="${el.name}-hide" class="btn far fa-eye"></i></td>
+                <td><i id="${el.name}-orbit" class="btn far fa-eye-slash"></i></td>
+                <td><i id="${el.name}-focus" class="btn far fa-circle"></i></td>
+            </tr>`)
+        }
         table.children().last().css({color: `${el.element.color}`})
     })
 }
 
 /* Setup */
 
-const solSystem = new planets.SIM(planets.solarSystem, 50, 1);
-$('#scale-range').val(solSystem.scale)
+// const solSystem = new planets.SIM(planets.randomSystem(10), 1, 1);
+const solSystem = new planets.SIM(planets.solarSystem, 1, 1);
+$('#scale-range').val(solSystem._scale)
 $('#step-range').val(solSystem.step)
 const events = new planets.EVENTS(solSystem);
 
@@ -36,17 +45,30 @@ events.interval(10);
 /* Event Handling */
 
 events.setEventHandler($("#scale-minus"), "click", () => {
-    solSystem.scaleAdd(-10)   // reduce scale button
-    if (solSystem.scale<1) {solSystem.scale=1}
-    $('#scale-range').val(solSystem.scale)
+    solSystem.scaleAdd(-0.1)   // reduce scale button
+    if (solSystem._scale<0) {solSystem._scale=0}
+    $('#scale-range').val(solSystem._scale)
 });
 events.setEventHandler($("#scale-plus"), "click", () => {
-    solSystem.scaleAdd(10)    // increase scale button
-    if (solSystem.scale>1000) {solSystem.scale=1000}
-    $('#scale-range').val(solSystem.scale)
+    solSystem.scaleAdd(0.1)    // increase scale button
+    if (solSystem._scale>6) {solSystem._scale=6}
+    $('#scale-range').val(solSystem._scale)
 }); 
 events.setEventHandler($("#scale-range"), "input", (event) => {
-    solSystem.scale = Number($("#scale-range").val());
+    solSystem._scale = Number($("#scale-range").val());
+});
+events.setEventHandler($('#size-minus'), 'click', () => {
+    solSystem.sizeAdd(-100)   // reduce step button
+    if (solSystem.scaling<1) {solSystem.scaling=1}
+    $('#size-range').val(solSystem.scaling)
+});
+events.setEventHandler($('#size-plus'), 'click', () => {
+    solSystem.sizeAdd(100)   // increase step button
+    if (solSystem.scaling>2000) {solSystem.scaling=2000}
+    $('#size-range').val(solSystem.scaling)
+}); 
+events.setEventHandler($("#size-range"), "input", (event) => {
+    solSystem.scaling = Number($("#size-range").val());
 });
 events.setEventHandler($('#step-minus'), 'click', () => {
     solSystem.stepAdd(-1)   // reduce step button
@@ -98,10 +120,11 @@ const main = function(){
         let [planet, action] = $(this).attr('id').split('-')
         switch (action) {
             case 'hide':
-                $(`#${planet}`).toggle()
+                $(`#${planet}`).children('circle').toggle()
                 $(this).toggleClass('fa-eye fa-eye-slash')
                 break;
             case 'orbit':
+                $(`#${planet}`).children('path').toggle()
                 $(this).toggleClass('fa-eye-slash fa-eye')
                 break;
             case 'focus':

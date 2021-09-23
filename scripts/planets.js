@@ -1,6 +1,6 @@
 import calc from "http://127.0.0.1:5500/scripts/modules/calc.js";
 import astro from "http://127.0.0.1:5500/scripts/modules/astroCalc.js";
-import { solarSystem } from "http://127.0.0.1:5500/scripts/modules/astroCalc.js";
+import { solarSystem, randomSystem } from "http://127.0.0.1:5500/scripts/modules/astroCalc.js";
 import * as d3 from "https://cdn.skypack.dev/d3@7";
 
 ////////////////////////////// SIMULATION /////////////////////////////////
@@ -11,7 +11,7 @@ class SIM {
     constructor(system, scale, step) {
         // read in data
         this._system = system;
-        this._data = [];
+        this._data = [{"name": 'sun', "element": system}];
         for (const [name, el] of Object.entries(system.getSuborbitals())) {
             this._data.push({"name": name, "element": el});
         }
@@ -26,14 +26,15 @@ class SIM {
     // parameter getters and setters
     get data() {return this._data;}
     get d() {return this._day;}
-    get scale() {return this._scale;}
+    get scale() {return 10**this._scale;}
     get step() {return this._step;}
     set d(day) {this._day = day;}
     set scale(scale) {this._scale = scale;}
     set step(step) {this._step = step;}
     set scaling(scalor) {this._scalor = scalor;}
     set sizingMode(mode) {this._sizing = mode}
-    scaleAdd(x) {this.scale += x}
+    scaleAdd(x) {this._scale += x}
+    sizeAdd(x) {this.scaling += x}
     stepAdd(x) {this.step += x}
 
     // Create empty svg for each element in data
@@ -48,6 +49,9 @@ class SIM {
           .append("svg")
             .attr("class", "planet center")
             .attr("id", function(d){return d["name"]})
+        //   .insert("svg")
+        //     .attr("class", "orbit center")
+        //     .attr("id", function(d){return d["name"]+'-orbit'})
         // get canvas parameters
         let parentDim = d3.select(target).node().getBoundingClientRect(),
         width = parentDim.width,
@@ -60,12 +64,28 @@ class SIM {
     }
 
     addPlanets() {
-        this.data.forEach(datum => {
-            d3.select("#"+datum.name)
-              .append('circle')             // draw underlying circle
+        // Axes
+        // var x = d3.scaleLinear()
+        // .domain([-width/2, width/2])
+        // .range([ 0, width ]);
+
+        // var y = d3.scaleLinear()
+        // .domain([-height/2, height/2])
+        // .range([ height, 0]);
+        
+        this.data.forEach((datum, i) => {
+            let planet = d3.select("#"+datum.name)
+            planet.append('circle')             // draw underlying circle
                 .attr('r', datum.element._D*this._scalor*this.scale)
                 .attr('stroke', 'black')
-                .attr('fill', datum.element.color);
+                .attr('fill', datum.element.color)
+            if (i>0) {
+                planet.insert("path")               // draw orbit
+                    .attr("fill", "none")
+                    .attr("stroke", datum.element.color)
+                    .attr("stroke-width", 1.5)
+                    .style("display", "none");
+            }
             // d3.xml("http://127.0.0.1:5500/resources/images/planets/"+datum.name+".svg")     // svg graphics
             //     .then(function(d) {
             //         d3.select("#"+datum.name)
@@ -74,6 +94,7 @@ class SIM {
             //     });
         })
     }
+    /* Function for displaying planetary orbits */
 
     setPlanetSize() {
         this.data.forEach(datum => {
@@ -83,21 +104,31 @@ class SIM {
         });
     }
 
-    planet(name) {return this._system.getSuborbitals()[name];}
+    planet(name) {return this._system.getSuborbitals()[name];} // for debugging purposes only!
 
     position(d) {
         this.d = d;
+        this._system.updateElement(this.d); // update all elements, returns list of perihelion events
         let offset = {x: 0, y: 0};
         if (this._focus.focus) {
             let focus = this.data.find(el => el.name === this._focus.focus).element
             offset.x = -focus.pos.x;
             offset.y = -focus.pos.y;
         }
-        this._system.elementAt(this.d); // update all elements
         d3.selectAll("svg")
           .select("circle")
             .attr("cx", datum => {return ((datum.element.pos.x+offset.x)*this.scale).toString();})
-            .attr("cy", datum => {return ((datum.element.pos.y+offset.y)*this.scale).toString();})       
+            .attr("cy", datum => {return ((datum.element.pos.y+offset.y)*this.scale).toString();})
+        this.data.forEach(datum => {
+            // if (datum.name === 'moon') {console.log(datum.element.orbit)}
+            d3.select("#"+datum.name)
+              .select('path')
+                .datum(datum.element.orbit)
+                .attr("d", d3.line()
+                    .x(d => { return (d.x+offset.x+datum.element._f.x)*this.scale })
+                    .y(d => { return (d.y+offset.y+datum.element._f.y)*this.scale })
+                ); 
+        })     
     }
 
     frame() {
@@ -127,7 +158,7 @@ class EVENTS {
     }
 }
 
-export default {SIM, EVENTS, solarSystem}
+export default {SIM, EVENTS, solarSystem, randomSystem}
 
 // /* functions for html-interaction */
 

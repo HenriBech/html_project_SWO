@@ -1,4 +1,5 @@
 import calc from "http://127.0.0.1:5500/scripts/modules/calc.js";
+import * as colormap from "https://cdn.skypack.dev/d3@7";
 
 class astroElement {
     constructor(N, i, w, a, e, M, D, update) {
@@ -13,16 +14,15 @@ class astroElement {
         this._orbitals = {};                                                   // named list (object) of orbitals
         this.hasOrbitals = false;                                              // indicator for orbitals
         this._f = {x: 0, y: 0};                                                // elliptical focus of orbit
-        this.elementAt(0);                                                     // initialize object
     }
     elementAt(d) {
         // update orbital elements
-        this._N = calc.modulateCircle(calc.getRadians(this._N0 + this._update.N*d));
-        this._i = calc.modulateCircle(calc.getRadians(this._i0 + this._update.i*d));
-        this._w = calc.modulateCircle(calc.getRadians(this._w0 + this._update.w*d));
+        this._N = calc.modulateCircle(this._N0 + calc.getRadians(this._update.N*d));
+        this._i = calc.modulateCircle(this._i0 + calc.getRadians(this._update.i*d));
+        this._w = calc.modulateCircle(this._w0 + calc.getRadians(this._update.w*d));
         this._a = this._a0 + this._update.a*d;
         this._e = this._e0 + this._update.e*d;
-        this._M = calc.modulateCircle(calc.getRadians(this._M0 + this._update.M*d));
+        this._M = calc.modulateCircle(this._M0 + calc.getRadians(this._update.M*d));
         // additional variables
         this._w1 = calc.modulateCircle(this._N + this._w);         // longitude of perihelion
         this._L = calc.modulateCircle(this._M + this._w1);         // mean longitude
@@ -31,28 +31,20 @@ class astroElement {
         this._P = Math.pow(this._a, 1.5);     // orbital period (years if a is in AU, astronomical units)
         this._T = d-this._M/(Math.PI*2)*calc.Y*this._P;                                                    // time of perihelion
         this._E = calc.modulateCircle(this._M + this._e*Math.sin(this._M) * (1 + this._e*Math.cos(this._M)));  // eccentric anomaly
+    }
+
+    updateElement(d) {
+        this.elementAt(d);
         if (this.hasOrbitals) {
-            this.orbitalsFocus();
-            this.orbitalsAt(d);
+            for (const [name, orbital] of Object.entries(this._orbitals)) {
+                orbital._f = this.pos;
+                orbital.updateElement(d);
+            }
         };
-    }
-
-    orbitalsAt(d) { // recursively update lower orbitals
-        Object.values(this._orbitals).forEach(orbital => {
-            orbital.elementAt(d);
-        });
-    }
-
-    orbitalsFocus() {
-        Object.keys(this._orbitals).forEach(orbital => {
-            this._orbitals[orbital]._f = this.pos;
-        });
     }
 
     addOrbital(orbitals) { // accepts object with variable amount of orbitals
         Object.assign(this._orbitals, orbitals);
-        this.orbitalsFocus();
-        this.orbitalsAt(0)
         this.hasOrbitals = true;
     }
 
@@ -77,11 +69,50 @@ class astroElement {
     }
 
     get epoch() {
-        return Math.round(this._T);
+        return this._T;
+    }
+}
+class planetElement extends astroElement {
+    constructor(N, i, w, a, e, M, D, update) {
+        super(N, i, w, a, e, M, D, update);
+        this.elementAt(0);
+        this.calcOrbit(1000);
+        this._type = "planet"
+    }
+    elementAt(d) {
+        super.elementAt(d);
+        if (Math.abs(this._e) > 0.05) {this.approxE();}                             // if orbit is elliptical, approximate bessel-function
+        this._x = this._a * (Math.cos(this._E) - this._e);                          // x-coordinate on elliptic plane
+        this._y = this._a * (Math.sqrt(1 - this._e*this._e) * Math.sin(this._E));   // y-coordinate on elliptic plane
+        this._r = Math.sqrt(this._y*this._y+this._x*this._x);                       // distance from sun
+        this._v = calc.modulateCircle(Math.atan2(this._y, this._x));                     // true anomaly (angle between position and perihelion)
+        // 3D coordinates
+        this._xh = this._r * (Math.cos(this._N) * Math.cos(this._v+this._w) - Math.sin(this._N) * Math.sin(this._v+this._w) * Math.cos(this._i));
+        this._yh = this._r * (Math.sin(this._N) * Math.cos(this._v+this._w) + Math.cos(this._N) * Math.sin(this._v+this._w) * Math.cos(this._i));
+        this._zh = this._r * (Math.sin(this._v+this._w) * Math.sin(this._i));
+    }
+    approxE() {
+        var E1 = this._E;                           // initial approximation from circular orbit
+        var E0, delta;
+        do {                                        // approcimation of bessel-function
+            E0 = E1;
+            delta = (E0 - this._e * Math.sin(E0) - this._M) / (1 - this._e * Math.cos(E0));
+            E1 = E0 - delta;
+        } while (calc.getDegree(Math.abs(delta)) > 0.001);   // calculate to accuracy of 0.001 degrees
+        this._E = calc.modulateCircle(E1);                   // if orbit is too parabolical (e≈1), this will not converge!
+    }
+    calcOrbit(n) {
+        const T = this._P*calc.Y;
+        var ellipse = [];
+        for (let i = 0; i <= n; i++) {
+            this.elementAt(this.epoch+i*T/n);
+            ellipse.push(this.pos);
+        }
+        this.orbit = ellipse;
     }
 }
 
-class earthElement extends astroElement {
+class earthElement extends planetElement {
     constructor(N, i, w, a, e, M, D, update) {
         super(N, i, w, a, e, M, D, update);
         this._type = "earth";
@@ -104,36 +135,6 @@ class earthElement extends astroElement {
     }
 }
 
-class planetElement extends astroElement {
-    constructor(N, i, w, a, e, M, D, update) {
-        super(N, i, w, a, e, M, D, update);
-        this._type = "planet"
-    }
-    elementAt(d) {
-        super.elementAt(d);
-        if (Math.abs(this._e) > 0.05) {this.approxE();}                             // if orbit is elliptical, approximate bessel-function
-        this._x = this._a * (Math.cos(this._E) - this._e);                          // x-coordinate on elliptic plane
-        this._y = this._a * (Math.sqrt(1 - this._e*this._e) * Math.sin(this._E));   // y-coordinate on elliptic plane
-        this._r = Math.sqrt(this._y*this._y+this._x*this._x);                       // distance from sun
-        this._v = calc.modulateCircle(Math.atan2(this._y, this._x));                     // true anomaly (angle between position and perihelion)
-        // 3D coordinates
-        this._xh = this._r * (Math.cos(this._N) * Math.cos(this._v+this._w) - Math.sin(this._N) * Math.sin(this._v+this._w) * Math.cos(this._i));
-        this._yh = this._r * (Math.sin(this._N) * Math.cos(this._v+this._w) + Math.cos(this._N) * Math.sin(this._v+this._w) * Math.cos(this._i));
-        this._zh = this._r * (Math.sin(this._v+this._w) * Math.sin(this._i));
-
-    }
-    approxE() {
-        var E1 = this._E;                           // initial approximation from circular orbit
-        var E0, delta;
-        do {                                        // approcimation of bessel-function
-            E0 = E1;
-            delta = (E0 - this._e * Math.sin(E0) - this._M) / (1 - this._e * Math.cos(E0));
-            E1 = E0 - delta;
-        } while (calc.getDegree(Math.abs(delta)) > 0.001);   // calculate to accuracy of 0.001 degrees
-        this._E = calc.modulateCircle(E1);                   // if orbit is too parabolical (e≈1), this will not converge!
-    }
-}
-
 /* Objects to store update parameters */
 
 const system_init = {
@@ -143,7 +144,7 @@ const system_init = {
     a: 0,
     e: 0,
     M: 0,
-    D: 0,
+    D: calc.getAU(696340),
     update: {
         N: 0,
         i: 0,
@@ -212,7 +213,7 @@ const moon_init = {
     N: 125.1228,
     i: 5.1454,
     w: 318.0634,
-    a: calc.getAU(60.2666*6378.14), // earth-radii (km), converted to AU
+    a: calc.getAU(60.2666*6378.14),  // earth-radii (km), converted to AU
     e: 0.054900,
     M: 115.3654,
     D: calc.getAU(3475),
@@ -320,7 +321,7 @@ const neptune_init = {
 const planets = {
     "mercury": new planetElement(...Object.values(mercury_init)),
     "venus": new planetElement(...Object.values(venus_init)),
-    "earth": new earthElement(...Object.values(earth_init)),
+    "earth": new planetElement(...Object.values(earth_init)),
     "mars": new planetElement(...Object.values(mars_init)),
     "jupiter": new planetElement(...Object.values(jupiter_init)),
     "saturn": new planetElement(...Object.values(saturn_init)),
@@ -337,6 +338,7 @@ var moon = {"moon": new planetElement(...Object.values(moon_init))};
 solarSystem.orbital("earth").addOrbital(moon);
 
 // Add colors
+solarSystem.color = '#F2CD5D'; // Orange Yellow Crayola
 solarSystem.orbital("mercury").color = '#cb4b16';  // Orange
 solarSystem.orbital("venus").color = '#d33682';  // Pink
 solarSystem.orbital("earth").color = '#268bd2';  // Blue
@@ -347,5 +349,40 @@ solarSystem.orbital("saturn").color = '#859900';  // Yellow
 solarSystem.orbital("uranus").color = '#2aa198';  // Cyan
 solarSystem.orbital("neptune").color = '#6c71c4';  // Violet
 
+function randInit (dist, dM) {
+    return {
+        N: Math.random()*360,
+        i: Math.random()*10,
+        w: Math.random()*360,
+        a: dist,
+        e: Math.random()*0.2,
+        M: Math.random()*360,
+        D: calc.getAU(Math.random()*200000+3000),
+        update: {N: 0, i: 0, w: 0, a: 0, e: 0, M: dM}
+    }
+}
+
+function randomSystem(nPlanet) {
+    const system_init = {N: 0, i: 0, w: 0, a: 0, e: 0, M: 0, 
+        D: calc.getAU(696340), 
+        update: {N: 0, i: 0, w: 0, a: 0, e: 0, M: 0}
+    }
+    const randSystem = new astroElement(...Object.values(system_init));
+    randSystem._x = 0; randSystem._y = 0;
+    randSystem.color = '#'+Math.floor(Math.random()*16777215).toString(16);
+    const system_size = Math.floor(Math.random() * nPlanet);    // up to nPlanet planets in system
+    for (let i = 0; i < system_size; i++) {
+        let k = 0;
+        if (i>0) {k=2**(i-1)}
+        let dist = (4+3*k)/10; // Titius-Bode law
+        let dM = (1+Math.random())/(i+1);
+        let newSystem = new planetElement(...Object.values(randInit(dist, dM)));
+        newSystem.color = '#'+Math.floor(Math.random()*16777215).toString(16);
+        randSystem.addOrbital({['planet_'+i]: newSystem})
+    }
+    console.log(randSystem)
+    return randSystem;
+}
+
 export default {astroElement, earthElement, planetElement}
-export {solarSystem};
+export {solarSystem, randomSystem};

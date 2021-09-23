@@ -66,16 +66,16 @@
                         <p>Scale: </p>
                         <form action="javascript:void(0);">
                             <a href="#" id="scale-minus"><i class="fas fa-search-minus"></i></a>
-                            <input type="range" min="1" max="1000" class="slider" id="scale-range">
+                            <input type="range" min="0.0" max="6.0" step="0.01" class="slider" id="scale-range">
                             <a href="#" id="scale-plus"><i class="fas fa-search-plus"></i></a>
                         </form>
                     </div>
                     <div>
-                        <p>Planet-size: </p>
+                        <p>Planet Size: </p>
                         <form action="javascript:void(0);">
-                            <input type="button" value="Uniform" onclick="setPlanetSize('uniform')">
-                            <input type="button" value="True" onclick="setPlanetSize('true');">
-                            <input type="button" value="Relative" onclick="setPlanetSize('relative')">
+                            <a href="#" id="size-minus"><i class="fas fa-minus-circle"></i></a>
+                            <input type="range" min="1" max="2000" class="slider" id="size-range">
+                            <a href="#" id="size-plus"><i class="fas fa-plus-circle"></i></a>
                         </form>
                     </div>
                     <div>
@@ -87,9 +87,9 @@
                     <div>
                         <p>Speed: </p>
                         <form action="javascript:void(0);">
-                            <a href="#" id="step-minus"><i class="fas fa-minus-circle"></i></a>
+                            <a href="#" id="step-minus"><i class="fas fa-angle-right"></i></a>
                             <input type="range" min="0.0" max="20.0" step="0.1" class="slider" id="step-range">
-                            <a href="#" id="step-plus"><i class="fas fa-plus-circle"></i></a>
+                            <a href="#" id="step-plus"><i class="fas fa-angle-double-right"></i></a>
                         </form>
                     </div>
                 </div>
