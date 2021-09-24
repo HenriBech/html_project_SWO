@@ -79,6 +79,7 @@ class SIM {
                 .attr('r', datum.element._D*this._scalor*this.scale)
                 .attr('stroke', 'black')
                 .attr('fill', datum.element.color)
+                .attr('class', 'planet-style')
             if (i>0) {
                 planet.insert("path")               // draw orbit
                     .attr("fill", "none")

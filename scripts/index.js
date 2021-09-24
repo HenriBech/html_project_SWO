@@ -28,6 +28,29 @@ const populateSettings = function(system) {
     })
 }
 
+const focus = function (planet) {
+    $(`#${planet}-focus`).toggleClass('fa-circle fa-dot-circle');
+    if (!solSystem._focus.focused) {
+        solSystem._focus.focused = true;
+        solSystem._focus.focus = planet;
+        document.title = "Planets -> "+capitalize(planet);
+    } else {
+        if (solSystem._focus.focus == planet) {
+            solSystem._focus.focused = false;
+            solSystem._focus.focus = false;
+            document.title = "Planets"
+        } else {
+            $(`#${solSystem._focus.focus}-focus`).toggleClass('fa-circle fa-dot-circle');
+            solSystem._focus.focus = planet;
+            document.title = "Planets -> "+capitalize(planet);
+        }
+    }
+}
+
+function showPos(element, l=2) {
+    return "x="+element.pos.x.toFixed(l)+" y="+element.pos.y.toFixed(l);
+}
+
 /* Setup */
 
 // const solSystem = new planets.SIM(planets.randomSystem(10), 1, 1);
@@ -128,27 +151,22 @@ const main = function(){
                 $(this).toggleClass('fa-eye-slash fa-eye')
                 break;
             case 'focus':
-                $(this).toggleClass('fa-circle fa-dot-circle');
-                if (!solSystem._focus.focused) {
-                    solSystem._focus.focused = true;
-                    solSystem._focus.focus = planet;
-                    document.title = planet;
-                } else {
-                    if (solSystem._focus.focus == planet) {
-                        solSystem._focus.focused = false;
-                        solSystem._focus.focus = false;
-                        document.title = "Planets"
-                    } else {
-                        $(`#${solSystem._focus.focus}-focus`).toggleClass('fa-circle fa-dot-circle');
-                        solSystem._focus.focus = planet;
-                        document.title = planet;
-                    }
-                }
+                focus(planet);
                 break;
             default:
                 break;
         }
     })
+    $('.planet').css("pointer-events", "none").children('circle').click(function(event) {
+        let planet = $(this).parent().attr('id');
+        let element = solSystem.data.find(el => el.name===planet).element
+        $('.infostream').append("<div class='infobox'>"+
+            "<h1 style='color: "+element.color+";'>"+capitalize(planet)+"</h1>"+
+            "<p>"+"Pos: "+showPos(element)+"</p>"+
+            // "<p>"+text+"</p>"+
+        "</div>")
+        focus(planet)
+    });
 }
 
 $(document).ready(main);
