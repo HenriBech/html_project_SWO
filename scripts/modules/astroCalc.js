@@ -1,4 +1,4 @@
-import calc from "./scripts/modules/calc.js";
+import calc from "./calc.js";
 import * as colormap from "https://cdn.skypack.dev/d3@7";
 
 class astroElement {
