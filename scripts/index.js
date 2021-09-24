@@ -1,5 +1,5 @@
-import planets from "http://127.0.0.1:5500/scripts/planets.js";
-import calc from "http://127.0.0.1:5500/scripts/modules/calc.js";
+import planets from "./scripts/planets.js";
+import calc from "./scripts/modules/calc.js";
 
 /* Functions */
 
