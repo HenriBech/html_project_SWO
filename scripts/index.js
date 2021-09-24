@@ -1,5 +1,5 @@
-import planets from "./scripts/planets.js";
-import calc from "./scripts/modules/calc.js";
+import planets from "./planets.js";
+import calc from "./modules/calc.js";
 
 /* Functions */
 
